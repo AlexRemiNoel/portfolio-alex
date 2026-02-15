@@ -43,7 +43,8 @@ app.add_middleware(
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://0.0.0.0:3000",
-        "https://portfolio-alex-d1kmilbtj-alexreminoels-projects.vercel.app/"
+        "https://portfolio-alex-git-main-alexreminoels-projects.vercel.app/"
+        "https://portfolio-alex-2h4y.onrender.com/"
     ],
     allow_credentials=True,
     allow_methods=["*"],
