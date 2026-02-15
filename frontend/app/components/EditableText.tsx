@@ -17,16 +17,14 @@ export const EditableText = React.memo(function EditableText({
   className = "",
   inputClassName = "",
 }: EditableTextProps) {
-  if (!isEditing) {
-    return <span className={className}>{value}</span>;
-  }
+  if (!isEditing) return <span className={className}>{value}</span>;
 
   return (
     <input
       type="text"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className={inputClassName || className}
+      className={`bg-yellow-500/10 border-b-2 border-yellow-500 outline-none focus:bg-yellow-500/20 transition-all ${inputClassName || className}`}
     />
   );
 });

@@ -17,16 +17,14 @@ export const EditableTextarea = React.memo(function EditableTextarea({
   rows = 3,
   className = "",
 }: EditableTextareaProps) {
-  if (!isEditing) {
-    return <span className={className}>{value}</span>;
-  }
+  if (!isEditing) return <span className={`whitespace-pre-wrap ${className}`}>{value}</span>;
 
   return (
     <textarea
       value={value}
       onChange={(e) => onChange(e.target.value)}
       rows={rows}
-      className={className}
+      className={`w-full bg-yellow-500/10 border-2 border-yellow-500 rounded p-2 outline-none focus:bg-yellow-500/20 transition-all ${className}`}
     />
   );
 });

@@ -41,10 +41,7 @@ export default function Home() {
   if (isLoading || !portfolioData) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-zinc-600 dark:text-zinc-400">Loading portfolio...</p>
-        </div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -57,86 +54,93 @@ export default function Home() {
       await updatePortfolio(editData);
       setPortfolioData(editData);
       setIsEditing(false);
-      alert("Portfolio saved successfully!");
     } catch (error) {
-      alert("Failed to save portfolio.");
+      alert("Save failed. Session may have expired.");
+    } finally {
+      setIsSaving(false);
     }
-    setIsSaving(false);
   };
 
   const updateData = (path: string[], value: string) => {
-    const newData = { ...editData };
-    let current: any = newData;
-    for (let i = 0; i < path.length - 1; i++) {
-      current = current[path[i]];
-    }
-    current[path[path.length - 1]] = value;
-    setEditData(newData);
+    setEditData((prev: any) => {
+      const newData = JSON.parse(JSON.stringify(prev));
+      let current = newData;
+      for (let i = 0; i < path.length - 1; i++) {
+        current = current[path[i]];
+      }
+      current[path[path.length - 1]] = value;
+      return newData;
+    });
+  };
+
+  // --- Dynamic Item Handlers ---
+  const addProject = () => {
+    const newItems = [...editData.projects.items, { name: "New Project", description: "Desc", projectUrl: "#", githubUrl: "#" }];
+    setEditData({ ...editData, projects: { ...editData.projects, items: newItems } });
+  };
+
+  const addSkill = () => {
+    const newCats = [...editData.skills.categories, { name: "New Category", items: "Skill 1, Skill 2" }];
+    setEditData({ ...editData, skills: { ...editData.skills, categories: newCats } });
   };
 
   return (
-    <div className="min-h-screen bg-background transition-smooth">
-      {/* Controls Bar */}
-      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur border-b border-border py-3 px-6 shadow-md">
-        <div className="max-w-4xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            {isAuthenticated && (
-              <span className="text-sm text-accent flex items-center gap-2">
-                <span className="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
-                Authenticated
-              </span>
-            )}
-          </div>
-          <div className="flex gap-3">
-            {isEditing ? (
-              <>
-                <button onClick={handleSave} className="px-4 py-2 bg-accent text-white rounded-lg font-medium hover:opacity-90">
-                  {isSaving ? "Saving..." : "Save Changes"}
-                </button>
-                <button onClick={() => setIsEditing(false)} className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium">
-                  Cancel
-                </button>
-              </>
-            ) : (
-              <button onClick={() => isAuthenticated ? setIsEditing(true) : router.push("/login")} className="px-4 py-2 bg-primary text-white rounded-lg font-medium">
-                {isAuthenticated ? "Edit Portfolio" : "Login to Edit"}
-              </button>
-            )}
-          </div>
+    <div className="min-h-screen bg-background transition-smooth text-foreground">
+      {/* Edit Mode Indicator */}
+      {isEditing && (
+        <div className="bg-primary text-white text-center py-1 text-xs font-bold sticky top-0 z-[60] animate-pulse">
+          EDIT MODE ACTIVE
         </div>
-      </div>
+      )}
 
-      {/* Navigation */}
-      <nav className="sticky top-16 z-40 border-b border-border bg-background/80 backdrop-blur">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">
+      {/* Navbar */}
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur border-b border-border transition-smooth">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <h1 className="text-2xl font-bold tracking-tight">
             <EditableText
               value={isEditing ? editData.name : name}
               onChange={(v) => updateData(["name"], v)}
               isEditing={isEditing}
             />
           </h1>
-          <div className="flex gap-6 text-sm font-medium">
-            {["about", "skills", "projects", "contact"].map((item) => (
-              <a key={item} href={`#${item}`} className="hover:text-primary transition-smooth capitalize">
-                {portfolioData[item].title}
-              </a>
-            ))}
+
+          <div className="flex items-center gap-4">
+            {isEditing ? (
+              <div className="flex gap-2">
+                <button onClick={handleSave} className="hero-button bg-primary text-white text-sm px-4 py-2">
+                  {isSaving ? "Saving..." : "Save"}
+                </button>
+                <button onClick={() => setIsEditing(false)} className="hero-button bg-red-600 text-white text-sm px-4 py-2">
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <button onClick={() => isAuthenticated ? setIsEditing(true) : router.push("/login")} className="hero-button border border-primary text-primary text-sm px-4 py-2">
+                  {isAuthenticated ? "Edit Profile" : "Login"}
+                </button>
+                {isAuthenticated && (
+                  <button onClick={async () => { await logout(); window.location.reload(); }} className="text-zinc-500 hover:text-red-500 text-sm font-medium">
+                    Logout
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
-      </nav>
+      </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-12 space-y-12">
-        {/* Hero Section */}
-        <section className="fade-in-up py-20 text-center">
-          <h2 className="text-5xl md:text-6xl font-bold mb-6">
+      <main className="max-w-4xl mx-auto px-6 py-12 space-y-20">
+        {/* Hero */}
+        <section className="text-center py-16 fade-in-up">
+          <h2 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
             <EditableText
               value={isEditing ? editData.hero.headline : hero.headline}
               onChange={(v) => updateData(["hero", "headline"], v)}
               isEditing={isEditing}
             />
           </h2>
-          <div className="text-xl text-zinc-600 dark:text-zinc-400 mb-8 max-w-2xl mx-auto">
+          <div className="text-xl text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto mb-10">
             <EditableTextarea
               value={isEditing ? editData.hero.subheadline : hero.subheadline}
               onChange={(v) => updateData(["hero", "subheadline"], v)}
@@ -144,70 +148,134 @@ export default function Home() {
             />
           </div>
           <div className="flex gap-4 justify-center">
-            <a href="#projects" className="hero-button bg-primary text-white">View My Work</a>
-            <a href="/contact" className="hero-button border border-primary text-primary">Get In Touch</a>
+            <a href="#projects" className="hero-button bg-primary text-white px-8 py-3">View Portfolio</a>
+            <a href="#contact" className="hero-button border border-border text-foreground px-8 py-3">Contact Me</a>
           </div>
         </section>
 
-        {/* About Section */}
+        {/* About Card */}
         <section id="about" className="card fade-in-up">
-          <h3 className="text-3xl font-bold mb-6">{about.title}</h3>
-          <div className="text-lg leading-relaxed">
+          <h3 className="text-2xl font-bold mb-6 text-primary">About Me</h3>
+          <div className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-300">
             <EditableTextarea
               value={isEditing ? editData.about.content : about.content}
               onChange={(v) => updateData(["about", "content"], v)}
               isEditing={isEditing}
+              rows={5}
             />
           </div>
         </section>
 
-        {/* Skills Section */}
+        {/* Skills Card */}
         <section id="skills" className="card fade-in-up">
-          <h3 className="text-3xl font-bold mb-8">{skills.title}</h3>
+          <div className="flex justify-between items-center mb-8">
+            <h3 className="text-2xl font-bold text-primary">Technical Skills</h3>
+            {isEditing && (
+              <button onClick={addSkill} className="text-xs bg-green-600 text-white px-3 py-1 rounded-full">+ Add Category</button>
+            )}
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {(isEditing ? editData.skills.categories : skills.categories).map((cat: any, i: number) => (
-              <div key={i}>
-                <h4 className="font-semibold text-primary mb-3">{cat.name}</h4>
-                <p className="text-zinc-600 dark:text-zinc-400">{cat.items}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Projects Section */}
-        <section id="projects" className="card fade-in-up">
-          <h3 className="text-3xl font-bold mb-8">{projects.title}</h3>
-          <div className="grid gap-6">
-            {(isEditing ? editData.projects.items : projects.items).map((project: any, i: number) => (
-              <div key={i} className="p-6 border border-border rounded-lg hover:shadow-md transition-smooth">
-                <h4 className="text-xl font-semibold mb-2">{project.name}</h4>
-                <p className="text-zinc-600 dark:text-zinc-400 mb-4">{project.description}</p>
-                <div className="flex gap-4 text-sm font-medium">
-                  <a href={project.projectUrl} className="text-primary hover:underline">Live Demo</a>
-                  <a href={project.githubUrl} className="text-primary hover:underline">GitHub</a>
+              <div key={i} className="group relative">
+                {isEditing && (
+                  <button onClick={() => {
+                    const filtered = editData.skills.categories.filter((_: any, idx: number) => idx !== i);
+                    setEditData({ ...editData, skills: { ...editData.skills, categories: filtered } });
+                  }} className="absolute -left-6 top-1 text-red-500 opacity-0 group-hover:opacity-100">×</button>
+                )}
+                <h4 className="font-bold mb-2">
+                  <EditableText
+                    value={cat.name}
+                    onChange={(v) => {
+                      const updated = [...editData.skills.categories];
+                      updated[i].name = v;
+                      setEditData({ ...editData, skills: { ...editData.skills, categories: updated } });
+                    }}
+                    isEditing={isEditing}
+                  />
+                </h4>
+                <div className="text-zinc-500 text-sm italic">
+                  <EditableTextarea
+                    value={cat.items}
+                    onChange={(v) => {
+                      const updated = [...editData.skills.categories];
+                      updated[i].items = v;
+                      setEditData({ ...editData, skills: { ...editData.skills, categories: updated } });
+                    }}
+                    isEditing={isEditing}
+                    rows={2}
+                  />
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Contact Section */}
-        <section id="contact" className="card text-center fade-in-up">
-          <h3 className="text-3xl font-bold mb-6">{contact.title}</h3>
-          <p className="mb-8">{contact.message}</p>
-          <div className="flex gap-6 justify-center mb-8">
-            {contact.links.map((link: any, i: number) => (
-              <a key={i} href={link.url} className="text-primary hover:underline font-medium">
-                {link.name}
-              </a>
+        {/* Projects Card */}
+        <section id="projects" className="card fade-in-up">
+          <div className="flex justify-between items-center mb-8">
+            <h3 className="text-2xl font-bold text-primary">Featured Projects</h3>
+            {isEditing && (
+              <button onClick={addProject} className="text-xs bg-green-600 text-white px-3 py-1 rounded-full">+ Add Project</button>
+            )}
+          </div>
+          <div className="space-y-12">
+            {(isEditing ? editData.projects.items : projects.items).map((project: any, i: number) => (
+              <div key={i} className="border-l-4 border-primary/20 pl-6 group relative">
+                {isEditing && (
+                  <button onClick={() => {
+                    const filtered = editData.projects.items.filter((_: any, idx: number) => idx !== i);
+                    setEditData({ ...editData, projects: { ...editData.projects, items: filtered } });
+                  }} className="absolute -left-10 top-0 text-red-500 text-xl opacity-0 group-hover:opacity-100">×</button>
+                )}
+                <h4 className="text-xl font-bold mb-3">
+                  <EditableText
+                    value={project.name}
+                    onChange={(v) => {
+                      const updated = [...editData.projects.items];
+                      updated[i].name = v;
+                      setEditData({ ...editData, projects: { ...editData.projects, items: updated } });
+                    }}
+                    isEditing={isEditing}
+                  />
+                </h4>
+                <div className="text-zinc-500 dark:text-zinc-400 mb-4">
+                  <EditableTextarea
+                    value={project.description}
+                    onChange={(v) => {
+                      const updated = [...editData.projects.items];
+                      updated[i].description = v;
+                      setEditData({ ...editData, projects: { ...editData.projects, items: updated } });
+                    }}
+                    isEditing={isEditing}
+                  />
+                </div>
+                {isEditing && (
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    <input className="text-xs p-1 bg-muted border border-border rounded" value={project.projectUrl} onChange={(e) => {
+                      const updated = [...editData.projects.items];
+                      updated[i].projectUrl = e.target.value;
+                      setEditData({ ...editData, projects: { ...editData.projects, items: updated } });
+                    }} placeholder="Demo Link" />
+                    <input className="text-xs p-1 bg-muted border border-border rounded" value={project.githubUrl} onChange={(e) => {
+                      const updated = [...editData.projects.items];
+                      updated[i].githubUrl = e.target.value;
+                      setEditData({ ...editData, projects: { ...editData.projects, items: updated } });
+                    }} placeholder="GitHub Link" />
+                  </div>
+                )}
+                <div className="flex gap-4 text-sm font-bold text-primary">
+                  <a href={project.projectUrl} className="hover:underline">Live Demo</a>
+                  <a href={project.githubUrl} className="hover:underline">GitHub</a>
+                </div>
+              </div>
             ))}
           </div>
-          <a href="/contact" className="hero-button bg-primary text-white">Send Me a Message</a>
         </section>
       </main>
 
-      <footer className="py-12 text-center text-sm border-t border-border">
-        <p>© {footer.year} {footer.name}. Built with FastAPI & Next.js</p>
+      <footer className="py-10 text-center border-t border-border opacity-50 text-xs">
+        <p>© {footer.year} {footer.name}. Powered by Gemini & Next.js</p>
       </footer>
     </div>
   );
