@@ -10,21 +10,14 @@ interface EditableTextProps {
   inputClassName?: string;
 }
 
-export const EditableText = React.memo(function EditableText({
-  value,
-  onChange,
-  isEditing,
-  className = "",
-  inputClassName = "",
-}: EditableTextProps) {
+export const EditableText = ({ value, onChange, isEditing, className = "" }: any) => {
   if (!isEditing) return <span className={className}>{value}</span>;
-
   return (
     <input
       type="text"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className={`bg-yellow-500/10 border-b-2 border-yellow-500 outline-none focus:bg-yellow-500/20 transition-all ${inputClassName || className}`}
+      className={`font-inherit bg-transparent !border-b-2 !border-primary !rounded-none !px-0 ${className}`}
     />
   );
-});
+};

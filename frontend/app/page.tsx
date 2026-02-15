@@ -99,7 +99,7 @@ export default function Home() {
           <h1 className="text-2xl font-bold tracking-tight">
             <EditableText
               value={isEditing ? editData.name : name}
-              onChange={(v) => updateData(["name"], v)}
+              onChange={(v: string) => updateData(["name"], v)}
               isEditing={isEditing}
             />
           </h1>
@@ -136,14 +136,14 @@ export default function Home() {
           <h2 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
             <EditableText
               value={isEditing ? editData.hero.headline : hero.headline}
-              onChange={(v) => updateData(["hero", "headline"], v)}
+              onChange={(v: string) => updateData(["hero", "headline"], v)}
               isEditing={isEditing}
             />
           </h2>
           <div className="text-xl text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto mb-10">
             <EditableTextarea
               value={isEditing ? editData.hero.subheadline : hero.subheadline}
-              onChange={(v) => updateData(["hero", "subheadline"], v)}
+              onChange={(v: string) => updateData(["hero", "subheadline"], v)}
               isEditing={isEditing}
             />
           </div>
@@ -159,7 +159,7 @@ export default function Home() {
           <div className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-300">
             <EditableTextarea
               value={isEditing ? editData.about.content : about.content}
-              onChange={(v) => updateData(["about", "content"], v)}
+              onChange={(v: string) => updateData(["about", "content"], v)}
               isEditing={isEditing}
               rows={5}
             />
@@ -186,7 +186,7 @@ export default function Home() {
                 <h4 className="font-bold mb-2">
                   <EditableText
                     value={cat.name}
-                    onChange={(v) => {
+                    onChange={(v: any) => {
                       const updated = [...editData.skills.categories];
                       updated[i].name = v;
                       setEditData({ ...editData, skills: { ...editData.skills, categories: updated } });
@@ -197,7 +197,7 @@ export default function Home() {
                 <div className="text-zinc-500 text-sm italic">
                   <EditableTextarea
                     value={cat.items}
-                    onChange={(v) => {
+                    onChange={(v: any) => {
                       const updated = [...editData.skills.categories];
                       updated[i].items = v;
                       setEditData({ ...editData, skills: { ...editData.skills, categories: updated } });
@@ -231,7 +231,7 @@ export default function Home() {
                 <h4 className="text-xl font-bold mb-3">
                   <EditableText
                     value={project.name}
-                    onChange={(v) => {
+                    onChange={(v: any) => {
                       const updated = [...editData.projects.items];
                       updated[i].name = v;
                       setEditData({ ...editData, projects: { ...editData.projects, items: updated } });
@@ -242,7 +242,7 @@ export default function Home() {
                 <div className="text-zinc-500 dark:text-zinc-400 mb-4">
                   <EditableTextarea
                     value={project.description}
-                    onChange={(v) => {
+                    onChange={(v: any) => {
                       const updated = [...editData.projects.items];
                       updated[i].description = v;
                       setEditData({ ...editData, projects: { ...editData.projects, items: updated } });
@@ -275,7 +275,7 @@ export default function Home() {
       </main>
 
       <footer className="py-10 text-center border-t border-border opacity-50 text-xs">
-        <p>© {footer.year} {footer.name}. Powered by Gemini & Next.js</p>
+        <p>© {footer.year} {footer.name}. Powered by Next.js</p>
       </footer>
     </div>
   );

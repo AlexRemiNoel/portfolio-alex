@@ -10,21 +10,14 @@ interface EditableTextareaProps {
   className?: string;
 }
 
-export const EditableTextarea = React.memo(function EditableTextarea({
-  value,
-  onChange,
-  isEditing,
-  rows = 3,
-  className = "",
-}: EditableTextareaProps) {
-  if (!isEditing) return <span className={`whitespace-pre-wrap ${className}`}>{value}</span>;
-
+export const EditableTextarea = ({ value, onChange, isEditing, rows = 3, className = "" }: any) => {
+  if (!isEditing) return <p className={`whitespace-pre-wrap ${className}`}>{value}</p>;
   return (
     <textarea
       value={value}
       onChange={(e) => onChange(e.target.value)}
       rows={rows}
-      className={`w-full bg-yellow-500/10 border-2 border-yellow-500 rounded p-2 outline-none focus:bg-yellow-500/20 transition-all ${className}`}
+      className={`w-full mt-2 ${className}`}
     />
   );
-});
+};
