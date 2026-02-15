@@ -85,84 +85,107 @@ export default function Home() {
   };
 
  return (
-  <div className="min-h-screen pb-20">
-    {/* Clean, Fixed Navbar */}
+  <div className="w-full flex flex-col items-center">
+    {/* Navbar - Centered Content */}
     <nav className="nav-blur">
-      <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="text-xl font-extrabold tracking-tighter hover:opacity-80 transition">
+      <div className="w-full max-w-5xl px-6 h-20 flex items-center justify-between">
+        <div className="text-xl font-bold tracking-tighter">
           <EditableText
             value={isEditing ? editData.name : name}
-            onChange={(v) => updateData(["name"], v)}
+            onChange={(v: string) => updateData(["name"], v)}
             isEditing={isEditing}
           />
         </div>
 
-        <div className="flex items-center gap-6">
-          <div className="hidden md:flex gap-6 text-sm font-medium text-gray-400">
-            <a href="#about" className="hover:text-white transition">About</a>
-            <a href="#projects" className="hover:text-white transition">Work</a>
-          </div>
-          
-          <div className="flex gap-2">
-            {isEditing ? (
-              <>
-                <button onClick={handleSave} className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-bold transition">Save</button>
-                <button onClick={() => setIsEditing(false)} className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full text-sm font-bold transition">Cancel</button>
-              </>
-            ) : (
-              <button 
-                onClick={() => isAuthenticated ? setIsEditing(true) : router.push("/login")}
-                className="bg-white text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-gray-200 transition"
-              >
-                {isAuthenticated ? "Edit Profile" : "Login"}
-              </button>
-            )}
-          </div>
+        <div className="flex items-center gap-4">
+          {isEditing ? (
+            <div className="flex gap-2">
+              <button onClick={handleSave} className="btn-main !py-2 !px-5 !text-sm !bg-blue-600 !text-white">Save</button>
+              <button onClick={() => setIsEditing(false)} className="text-sm font-bold text-slate-400 px-4">Cancel</button>
+            </div>
+          ) : (
+            <button 
+              onClick={() => isAuthenticated ? setIsEditing(true) : router.push("/login")}
+              className="btn-main !py-2 !px-5 !text-sm"
+            >
+              {isAuthenticated ? "Edit Profile" : "Login"}
+            </button>
+          )}
         </div>
       </div>
     </nav>
 
-    {/* Centered Main Content */}
-    <main className="main-container pt-20 space-y-24">
+    {/* Main Body - All Centered */}
+    <main className="content-wrapper py-20 space-y-24">
       
-      {/* Hero Section - Centered with spacing */}
-      <section className="text-center space-y-8 py-10">
-        <h2 className="text-5xl md:text-7xl leading-tight">
+      {/* Hero Section */}
+      <section className="flex flex-col items-center py-10">
+        <h2 className="hero-title">
           <EditableText
             value={isEditing ? editData.hero.headline : hero.headline}
-            onChange={(v) => updateData(["hero", "headline"], v)}
+            onChange={(v: string) => updateData(["hero", "headline"], v)}
             isEditing={isEditing}
           />
         </h2>
-        <div className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+        <div className="text-xl text-slate-400 max-w-xl leading-relaxed">
           <EditableTextarea
             value={isEditing ? editData.hero.subheadline : hero.subheadline}
-            onChange={(v) => updateData(["hero", "subheadline"], v)}
+            onChange={(v: string) => updateData(["hero", "subheadline"], v)}
             isEditing={isEditing}
           />
         </div>
+        <div className="flex gap-4 mt-10">
+           <a href="#projects" className="btn-main">My Work</a>
+           <a href="#contact" className="px-8 py-3 border border-slate-700 rounded-full font-bold hover:bg-slate-800 transition">Contact</a>
+        </div>
       </section>
 
-      {/* About Section */}
+      {/* About Section - Card Pattern */}
       <section id="about" className="portfolio-card">
-        <h3 className="text-blue-500 text-sm font-bold uppercase tracking-widest mb-6">Discovery</h3>
-        <div className="text-lg text-gray-300 leading-relaxed">
+        <span className="text-blue-500 font-black tracking-[0.3em] uppercase text-xs mb-6">About</span>
+        <div className="text-xl text-slate-300 leading-relaxed max-w-2xl">
           <EditableTextarea
             value={isEditing ? editData.about.content : about.content}
-            onChange={(v) => updateData(["about", "content"], v)}
+            onChange={(v: string) => updateData(["about", "content"], v)}
             isEditing={isEditing}
-            rows={5}
+            rows={4}
           />
         </div>
       </section>
 
-      {/* Skills & Projects would follow the same .portfolio-card pattern */}
-      
+      {/* Skills Section - Centered Grid */}
+      <section id="skills" className="portfolio-card">
+        <span className="text-emerald-500 font-black tracking-[0.3em] uppercase text-xs mb-8">Expertise</span>
+        <div className="grid md:grid-cols-2 gap-12 w-full max-w-3xl">
+          {(isEditing ? editData.skills.categories : skills.categories).map((cat: any, i: number) => (
+            <div key={i} className="flex flex-col items-center">
+              <h4 className="font-bold text-lg mb-2">
+                 <EditableText 
+                    value={cat.name} 
+                    isEditing={isEditing} 
+                    onChange={(v: string) => {
+                       const newCats = [...editData.skills.categories];
+                       newCats[i].name = v;
+                       setEditData({...editData, skills: {...editData.skills, categories: newCats}});
+                    }}
+                 />
+              </h4>
+              <div className="text-slate-500 italic">
+                 <EditableText 
+                    value={cat.items} 
+                    isEditing={isEditing} 
+                    onChange={(v: string) => {
+                       const newCats = [...editData.skills.categories];
+                       newCats[i].items = v;
+                       setEditData({...editData, skills: {...editData.skills, categories: newCats}});
+                    }}
+                 />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </main>
-
-    <footer className="mt-32 text-center text-gray-600 text-sm">
-       <p>© {new Date().getFullYear()} {name}. Built with Next.js</p>
-    </footer>
   </div>
 );
 }
