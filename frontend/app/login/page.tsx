@@ -49,10 +49,10 @@ export default function LoginPage() {
               </svg>
             </div>
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Portfolio Admin
+              Portfolio Login
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mt-2">
-              Sign in to manage your portfolio
+              Sign in to into your account
             </p>
           </div>
 
@@ -143,18 +143,9 @@ export default function LoginPage() {
               href="/"
               className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
             >
-              ← Back to Portfolio
+              Back to Portfolio
             </a>
           </div>
-        </div>
-
-        <div className="mt-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Default: <span className="font-mono">admin / admin123</span>
-          </p>
-          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-            (Change password after first login)
-          </p>
         </div>
       </div>
     </div>
