@@ -64,6 +64,7 @@ class ContactLink(BaseModel):
 class ContactSection(BaseModel):
     title: str
     message: str
+    email: str  # Primary contact email
     links: List[ContactLink]
 
 class FooterSection(BaseModel):
@@ -124,3 +125,10 @@ class FeedbackResponse(BaseModel):
 
 class FeedbackApprove(BaseModel):
     approve: bool
+
+# Contact Email Schema
+class ContactEmailRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=100)
+    email: EmailStr
+    subject: str = Field(..., min_length=1, max_length=200)
+    message: str = Field(..., min_length=1, max_length=2000)
