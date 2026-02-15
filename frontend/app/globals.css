@@ -2,46 +2,98 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-
 :root {
-  --background: #020617;
-  --foreground: #f8fafc;
-  --primary: #3b82f6;
-  --card-bg: rgba(15, 23, 42, 0.8);
-  --border: rgba(51, 65, 85, 0.5);
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 15, 23, 42;
+    --background-end-rgb: 15, 23, 42;
+  }
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  @apply min-h-screen flex flex-col items-center; /* Centers the body content */
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-start-rgb));
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Centered Layout Container */
-.content-wrapper {
-  @apply w-full max-w-4xl px-6 flex flex-col items-center text-center;
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-/* Navbar Centering */
-.nav-blur {
-  @apply sticky top-0 z-50 w-full flex justify-center border-b border-white/5 bg-slate-950/80 backdrop-blur-xl;
+html {
+  scroll-behavior: smooth;
 }
 
-/* Premium Card with Center Alignment */
-.portfolio-card {
-  @apply w-full bg-slate-900/40 border border-slate-800 rounded-[2rem] p-8 md:p-12 
-         flex flex-col items-center text-center transition-all duration-500
-         hover:border-blue-500/30 hover:shadow-[0_0_50px_-12px_rgba(59,130,246,0.3)];
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-/* Hero Title - Center Balanced */
-.hero-title {
-  @apply text-5xl md:text-7xl font-extrabold tracking-tighter leading-[1.1] mb-6;
+/* Custom scrollbar for dark mode */
+::-webkit-scrollbar {
+  width: 10px;
 }
 
-/* Button Styling */
-.btn-main {
-  @apply px-8 py-3 bg-white text-black font-bold rounded-full transition-transform active:scale-95;
+::-webkit-scrollbar-track {
+  background: rgb(var(--background-start-rgb));
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Smooth transitions */
+button,
+a {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Edit mode highlights */
+.edit-mode-highlight {
+  outline: 2px dashed #fbbf24;
+  outline-offset: 2px;
+}
+
+/* Focus styles */
+input:focus,
+textarea:focus,
+button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Dark mode improvements */
+@media (prefers-color-scheme: dark) {
+  input,
+  textarea {
+    color-scheme: dark;
+  }
 }
