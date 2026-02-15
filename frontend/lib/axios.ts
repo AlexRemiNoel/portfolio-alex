@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with default config
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
