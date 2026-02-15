@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import router from "next/router";
+import style from "styled-jsx/style";
 import { EditableText } from "./components/EditableText";
 import { EditableTextarea } from "./components/EditableTextarea";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com';
 
 export default function Home() {
   const router = useRouter();
@@ -72,7 +74,7 @@ export default function Home() {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/auth/me", {
+      const response = await fetch(`${API_URL}/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -94,7 +96,7 @@ export default function Home() {
 
   const loadPortfolio = async () => {
     try {
-      const response = await fetch("http://localhost:8000/portfolio");
+      const response = await fetch(`${API_URL}/portfolio`);
       if (response.ok) {
         const data = await response.json();
         setPortfolioData(data.data);
@@ -123,7 +125,7 @@ export default function Home() {
     setIsSaving(true);
     try {
       const token = localStorage.getItem("access_token");
-      const response = await fetch("http://localhost:8000/portfolio", {
+      const response = await fetch(`${API_URL}/portfolio`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -148,7 +150,7 @@ export default function Home() {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:8000/auth/logout", {
+      await fetch(`${API_URL}/auth/logout`, {
         method: "POST",
         credentials: "include",
       });
@@ -254,115 +256,132 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-blue-950">
-        <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background)' }}>
+        <div className="animate-pulse" style={{ color: 'var(--foreground)' }}>Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-blue-950">
+    <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--foreground)' }}>
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 border-b border-zinc-200 dark:border-blue-800 bg-white/80 dark:bg-blue-950/80 backdrop-blur">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-black dark:text-white">
-            <EditableText
-              value={isEditing ? editData.name : portfolioData.name}
-              onChange={(value: string) => updateData(["name"], value)}
-              isEditing={isEditing}
-            />
-          </h1>
-          <div className="flex gap-4 items-center">
-            <a
-              href="#about"
-              className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-            >
-              About
-            </a>
-            <a
-              href="#skills"
-              className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-            >
-              Skills
-            </a>
-            <a
-              href="#projects"
-              className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-            >
-              Projects
-            </a>
-            <a
-              href="#contact"
-              className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-            >
-              Contact
-            </a>
-            <a
-              href="/feedback"
-              className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-            >
-              Feedback
-            </a>
-            {isAuthenticated && (
-              <>
-                <a
-                  href="/feedback/admin"
-                  className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white"
-                >
+      <nav style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
+        borderBottom: '1px solid var(--border)',
+        background: 'rgba(10, 15, 30, 0.9)',
+        backdropFilter: 'blur(12px)',
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '1rem 1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: '700', margin: 0 }}>
+              <EditableText
+                value={isEditing ? editData.name : portfolioData.name}
+                onChange={(value: string) => updateData(["name"], value)}
+                isEditing={isEditing}
+              />
+            </h1>
+            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+              <a href="#about" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
+                 onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                 onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
+                About
+              </a>
+              <a href="#skills" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
+                 onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                 onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
+                Skills
+              </a>
+              <a href="#projects" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
+                 onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                 onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
+                Projects
+              </a>
+              <a href="/contact" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
+                 onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                 onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
+                Contact
+              </a>
+              <a href="/feedback" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
+                 onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                 onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
+                Feedback
+              </a>
+              {isAuthenticated && (
+                <a href="/feedback/admin" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
+                   onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                   onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
                   Admin
                 </a>
-              </>
-            )}
-            {!isEditing && (
-              <>
-                {isAuthenticated ? (
-                  <>
-                    <button
-                      onClick={handleEdit}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700"
-                    >
-                      Edit
+              )}
+              {!isEditing && (
+                <>
+                  {isAuthenticated ? (
+                    <>
+                      <button onClick={handleEdit} className="btn btn-primary">
+                        Edit
+                      </button>
+                      <button onClick={handleLogout} style={{
+                        padding: '0.75rem 1.5rem',
+                        background: 'var(--muted)',
+                        color: 'white',
+                        borderRadius: 'var(--radius-lg)',
+                        border: 'none',
+                        cursor: 'pointer',
+                        fontWeight: '600',
+                      }}>
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <button onClick={() => router.push("/login")} className="btn btn-primary">
+                      Login
                     </button>
-                    <button
-                      onClick={handleLogout}
-                      className="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-700"
-                    >
-                      Logout
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => router.push("/login")}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700"
-                  >
-                    Login
-                  </button>
-                )}
-              </>
-            )}
+                  )}
+                </>
+              )}
+            </div>
           </div>
         </div>
       </nav>
 
       {/* Edit Mode Banner */}
       {isEditing && (
-        <div className="sticky top-[73px] z-40 bg-yellow-100 dark:bg-yellow-900/50 border-b border-yellow-300 dark:border-yellow-700 px-6 py-3">
-          <div className="max-w-6xl mx-auto flex justify-between items-center">
-            <p className="text-yellow-900 dark:text-yellow-200 font-medium">
-              ✏️ Editing Mode - Click on any text to edit
+        <div style={{
+          position: 'sticky',
+          top: '73px',
+          zIndex: 40,
+          background: 'var(--warning)',
+          borderBottom: '1px solid rgba(0,0,0,0.1)',
+          padding: '0.75rem 1.5rem',
+        }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            <p style={{ fontWeight: '600', margin: 0 }}>
+              Editing Mode - Click on any text to edit
             </p>
-            <div className="flex gap-3">
-              <button
-                onClick={handleCancel}
-                className="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-700"
-              >
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button onClick={handleCancel} style={{
+                padding: '0.5rem 1rem',
+                background: '#6b7280',
+                color: 'white',
+                borderRadius: 'var(--radius-md)',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: '600',
+              }}>
                 Cancel
               </button>
-              <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50"
-              >
+              <button onClick={handleSave} disabled={isSaving} className="btn" style={{
+                padding: '0.5rem 1rem',
+                background: 'var(--success)',
+                color: 'white',
+                borderRadius: 'var(--radius-md)',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: '600',
+                opacity: isSaving ? 0.5 : 1,
+              }}>
                 {isSaving ? "Saving..." : "Save Changes"}
               </button>
             </div>
@@ -370,10 +389,10 @@ export default function Home() {
         </div>
       )}
 
-      <main className="max-w-6xl mx-auto px-6 py-20">
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         {/* Hero Section */}
-        <section className="text-center mb-32">
-          <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white mb-6">
+        <section style={{ textAlign: 'center', padding: '6rem 0', marginBottom: '4rem' }}>
+          <h2 style={{ fontSize: 'clamp(2.5rem, 8vw, 5rem)', fontWeight: '700', marginBottom: '1.5rem', lineHeight: '1.1' }}>
             <EditableText
               value={hero.headline}
               onChange={(value: string) =>
@@ -382,7 +401,7 @@ export default function Home() {
               isEditing={isEditing}
             />
           </h2>
-          <p className="text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
+          <p style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)', color: 'var(--muted)', maxWidth: '700px', margin: '0 auto' }}>
             <EditableText
               value={hero.subheadline}
               onChange={(value: string) =>
@@ -394,18 +413,15 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <section
-          id="about"
-          className="mb-32 dark:bg-blue-900/50 dark:rounded-lg dark:p-8"
-        >
-          <h3 className="text-3xl font-bold text-black dark:text-white mb-6">
+        <section id="about" className="card" style={{ marginBottom: '4rem' }}>
+          <h3 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '700', marginBottom: '1.5rem' }}>
             <EditableText
               value={about.title}
               onChange={(value: string) => updateData(["about", "title"], value)}
               isEditing={isEditing}
             />
           </h3>
-          <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          <p style={{ fontSize: '1.125rem', lineHeight: '1.8', color: 'var(--muted)' }}>
             <EditableTextarea
               value={about.content}
               onChange={(value: string) =>
@@ -418,11 +434,8 @@ export default function Home() {
         </section>
 
         {/* Skills Section */}
-        <section
-          id="skills"
-          className="mb-32 dark:bg-blue-900/50 dark:rounded-lg dark:p-8"
-        >
-          <h3 className="text-3xl font-bold text-black dark:text-white mb-6">
+        <section id="skills" className="card" style={{ marginBottom: '4rem' }}>
+          <h3 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '700', marginBottom: '1.5rem' }}>
             <EditableText
               value={skills.title}
               onChange={(value: string) =>
@@ -431,21 +444,31 @@ export default function Home() {
               isEditing={isEditing}
             />
           </h3>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid-2">
             {skills.categories.map((category: any, index: number) => (
-              <div
-                key={index}
-                className="p-6 border border-zinc-200 dark:border-blue-700 rounded-lg relative"
-              >
+              <div key={index} className="card" style={{ position: 'relative' }}>
                 {isEditing && (
                   <button
                     onClick={() => removeSkillCategory(index)}
-                    className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold hover:bg-red-700"
+                    style={{
+                      position: 'absolute',
+                      top: '-8px',
+                      right: '-8px',
+                      background: 'var(--error)',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '24px',
+                      height: '24px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontWeight: '700',
+                      fontSize: '16px',
+                    }}
                   >
                     ×
                   </button>
                 )}
-                <h4 className="font-semibold text-xl text-black dark:text-white mb-3">
+                <h4 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '1rem' }}>
                   <EditableText
                     value={
                       isEditing
@@ -462,7 +485,7 @@ export default function Home() {
                     isEditing={isEditing}
                   />
                 </h4>
-                <p className="text-zinc-600 dark:text-zinc-400">
+                <p style={{ color: 'var(--muted)', lineHeight: '1.6' }}>
                   <EditableTextarea
                     value={
                       isEditing
@@ -486,7 +509,16 @@ export default function Home() {
           {isEditing && (
             <button
               onClick={addSkillCategory}
-              className="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700"
+              style={{
+                marginTop: '1.5rem',
+                padding: '0.75rem 1.5rem',
+                background: 'var(--success)',
+                color: 'white',
+                borderRadius: 'var(--radius-lg)',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: '600',
+              }}
             >
               + Add Skill Category
             </button>
@@ -494,11 +526,8 @@ export default function Home() {
         </section>
 
         {/* Projects Section */}
-        <section
-          id="projects"
-          className="mb-32 dark:bg-blue-900/50 dark:rounded-lg dark:p-8"
-        >
-          <h3 className="text-3xl font-bold text-black dark:text-white mb-6">
+        <section id="projects" className="card" style={{ marginBottom: '4rem' }}>
+          <h3 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '700', marginBottom: '1.5rem' }}>
             <EditableText
               value={projects.title}
               onChange={(value: string) =>
@@ -507,21 +536,32 @@ export default function Home() {
               isEditing={isEditing}
             />
           </h3>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid-2">
             {projects.items.map((project: any, index: number) => (
-              <div
-                key={index}
-                className="p-6 border border-zinc-200 dark:border-blue-700 rounded-lg relative"
-              >
+              <div key={index} className="card" style={{ position: 'relative' }}>
                 {isEditing && (
                   <button
                     onClick={() => removeProject(index)}
-                    className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold hover:bg-red-700 z-10"
+                    style={{
+                      position: 'absolute',
+                      top: '-8px',
+                      right: '-8px',
+                      background: 'var(--error)',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '24px',
+                      height: '24px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontWeight: '700',
+                      fontSize: '16px',
+                      zIndex: 10,
+                    }}
                   >
                     ×
                   </button>
                 )}
-                <h4 className="font-semibold text-xl text-black dark:text-white mb-3">
+                <h4 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '1rem' }}>
                   <EditableText
                     value={
                       isEditing
@@ -538,7 +578,7 @@ export default function Home() {
                     isEditing={isEditing}
                   />
                 </h4>
-                <p className="text-zinc-600 dark:text-zinc-400 mb-4">
+                <p style={{ color: 'var(--muted)', marginBottom: '1rem', lineHeight: '1.6' }}>
                   <EditableTextarea
                     value={
                       isEditing
@@ -557,7 +597,7 @@ export default function Home() {
                   />
                 </p>
                 {isEditing ? (
-                  <div className="space-y-2">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                     <input
                       type="text"
                       placeholder="Project URL"
@@ -570,7 +610,6 @@ export default function Home() {
                           return newData;
                         });
                       }}
-                      className="w-full px-3 py-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded text-sm"
                     />
                     <input
                       type="text"
@@ -584,20 +623,19 @@ export default function Home() {
                           return newData;
                         });
                       }}
-                      className="w-full px-3 py-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded text-sm"
                     />
                   </div>
                 ) : (
-                  <div className="flex gap-4 text-sm">
+                  <div style={{ display: 'flex', gap: '1rem', fontSize: '0.9rem' }}>
                     <a
                       href={project.projectUrl}
-                      className="text-blue-600 dark:text-blue-400 hover:underline"
+                      style={{ color: 'var(--primary)' }}
                     >
                       View Project →
                     </a>
                     <a
                       href={project.githubUrl}
-                      className="text-blue-600 dark:text-blue-400 hover:underline"
+                      style={{ color: 'var(--primary)' }}
                     >
                       GitHub →
                     </a>
@@ -609,7 +647,16 @@ export default function Home() {
           {isEditing && (
             <button
               onClick={addProject}
-              className="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700"
+              style={{
+                marginTop: '1.5rem',
+                padding: '0.75rem 1.5rem',
+                background: 'var(--success)',
+                color: 'white',
+                borderRadius: 'var(--radius-lg)',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: '600',
+              }}
             >
               + Add Project
             </button>
@@ -619,9 +666,16 @@ export default function Home() {
         {/* Contact Section */}
         <section
           id="contact"
-          className="py-20 border-t border-zinc-200 dark:border-blue-800 text-center dark:bg-blue-900/50 dark:rounded-lg dark:p-8 dark:mt-8"
+          style={{
+            padding: '3rem',
+            borderTop: '1px solid var(--border)',
+            textAlign: 'center',
+            background: 'var(--card)',
+            borderRadius: 'var(--radius-xl)',
+            marginTop: '4rem',
+          }}
         >
-          <h3 className="text-3xl font-bold text-black dark:text-white mb-6">
+          <h3 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '700', marginBottom: '1.5rem' }}>
             <EditableText
               value={contact.title}
               onChange={(value: string) =>
@@ -630,7 +684,7 @@ export default function Home() {
               isEditing={isEditing}
             />
           </h3>
-          <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-8">
+          <p style={{ fontSize: '1.125rem', color: 'var(--muted)', marginBottom: '2rem' }}>
             <EditableTextarea
               value={contact.message}
               onChange={(value: string) =>
@@ -643,32 +697,45 @@ export default function Home() {
 
           {/* Contact Email (Editable) */}
           {isEditing && (
-            <div className="mb-6 max-w-md mx-auto">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <div style={{ maxWidth: '500px', margin: '0 auto 2rem' }}>
+              <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '500', marginBottom: '0.5rem' }}>
                 Contact Email:
               </label>
               <input
                 type="email"
                 value={editData.contact.email}
                 onChange={(e) => updateData(["contact", "email"], e.target.value)}
-                className="w-full px-4 py-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded-lg"
               />
             </div>
           )}
 
-          <div className="flex gap-6 justify-center text-sm font-medium flex-wrap mb-8">
+          <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '2rem' }}>
             {contact.links.map((link: any, index: number) => (
-              <div key={index} className="relative">
+              <div key={index} style={{ position: 'relative' }}>
                 {isEditing && (
                   <button
                     onClick={() => removeContactLink(index)}
-                    className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold hover:bg-red-700 z-10"
+                    style={{
+                      position: 'absolute',
+                      top: '-8px',
+                      right: '-8px',
+                      background: 'var(--error)',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '20px',
+                      height: '20px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontWeight: '700',
+                      fontSize: '14px',
+                      zIndex: 10,
+                    }}
                   >
                     ×
                   </button>
                 )}
                 {isEditing ? (
-                  <div className="space-y-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded-lg">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '0.75rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
                     <input
                       type="text"
                       placeholder="Name (e.g., Email)"
@@ -680,11 +747,11 @@ export default function Home() {
                           return newData;
                         });
                       }}
-                      className="w-full px-3 py-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-sm"
+                      style={{ fontSize: '0.9rem' }}
                     />
                     <input
                       type="text"
-                      placeholder="URL (e.g., mailto:you@email.com)"
+                      placeholder="URL"
                       value={editData.contact.links[index].url}
                       onChange={(e) => {
                         setEditData((prevData: any) => {
@@ -693,13 +760,13 @@ export default function Home() {
                           return newData;
                         });
                       }}
-                      className="w-full px-3 py-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-sm"
+                      style={{ fontSize: '0.9rem' }}
                     />
                   </div>
                 ) : (
                   <a
                     href={link.url}
-                    className="text-blue-600 dark:text-blue-400 hover:underline"
+                    style={{ color: 'var(--primary)', fontWeight: '500' }}
                   >
                     {link.name}
                   </a>
@@ -711,7 +778,16 @@ export default function Home() {
           {isEditing && (
             <button
               onClick={addContactLink}
-              className="px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700"
+              style={{
+                padding: '0.75rem 1.5rem',
+                background: 'var(--success)',
+                color: 'white',
+                borderRadius: 'var(--radius-lg)',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: '600',
+                marginBottom: '2rem',
+              }}
             >
               + Add Contact Link
             </button>
@@ -719,10 +795,11 @@ export default function Home() {
 
           {/* Contact Form Button */}
           {!isEditing && (
-            <div className="mt-8">
+            <div style={{ marginTop: '2rem' }}>
               <a
                 href="/contact"
-                className="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition"
+                className="btn btn-primary"
+                style={{ display: 'inline-block', textDecoration: 'none' }}
               >
                 Send Me a Message
               </a>
@@ -732,8 +809,14 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-200 dark:border-blue-800 py-8 text-center text-sm text-zinc-600 dark:text-zinc-400">
-        <p>
+      <footer style={{
+        borderTop: '1px solid var(--border)',
+        padding: '2rem 1.5rem',
+        textAlign: 'center',
+        color: 'var(--muted)',
+        fontSize: '0.9rem',
+      }}>
+        <p style={{ margin: 0 }}>
           © {footer.year}{" "}
           <EditableText
             value={footer.name}

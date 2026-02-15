@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getApprovedFeedback, submitFeedback } from "@/lib/api";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com';
 
 interface Feedback {
   id: number;
@@ -29,8 +30,11 @@ export default function FeedbackPage() {
 
   const loadApprovedFeedback = async () => {
     try {
-      const data = await getApprovedFeedback();
-      setApprovedFeedback(data);
+      const response = await fetch(`${API_URL}/feedback/approved`);
+      if (response.ok) {
+        const data = await response.json();
+        setApprovedFeedback(data);
+      }
     } catch (err) {
       console.error("Failed to load feedback:", err);
     }
@@ -43,22 +47,33 @@ export default function FeedbackPage() {
     setSubmitSuccess(false);
 
     try {
-      await submitFeedback({
-        name,
-        email: email || undefined,
-        message,
-        rating,
+      const response = await fetch(`${API_URL}/feedback`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email: email || null,
+          message,
+          rating,
+        }),
       });
 
-      setSubmitSuccess(true);
-      setName("");
-      setEmail("");
-      setMessage("");
-      setRating(5);
-      setTimeout(() => setSubmitSuccess(false), 5000);
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.detail || "Failed to submit feedback";
-      setError(errorMessage);
+      if (response.ok) {
+        setSubmitSuccess(true);
+        setName("");
+        setEmail("");
+        setMessage("");
+        setRating(5);
+        setTimeout(() => setSubmitSuccess(false), 5000);
+        loadApprovedFeedback();
+      } else {
+        const errorData = await response.json();
+        setError(errorData.detail || "Failed to submit feedback");
+      }
+    } catch (err) {
+      setError("Failed to connect to server");
       console.error("Submit error:", err);
     } finally {
       setIsSubmitting(false);
@@ -67,16 +82,24 @@ export default function FeedbackPage() {
 
   const StarRating = ({ rating: currentRating, onRate }: { rating: number; onRate?: (rating: number) => void }) => {
     return (
-      <div className="flex gap-1">
+      <div style={{ display: 'flex', gap: '0.25rem' }}>
         {[1, 2, 3, 4, 5].map((star) => (
           <button
             key={star}
             type="button"
             onClick={() => onRate && onRate(star)}
-            className={`text-2xl transition ${
-              star <= currentRating ? "text-yellow-400" : "text-gray-300 dark:text-gray-600"
-            } ${onRate ? "hover:text-yellow-300 cursor-pointer" : ""}`}
             disabled={!onRate}
+            style={{
+              fontSize: '1.5rem',
+              background: 'none',
+              border: 'none',
+              cursor: onRate ? 'pointer' : 'default',
+              color: star <= currentRating ? '#fbbf24' : 'var(--muted)',
+              transition: 'var(--transition-fast)',
+              padding: '0.25rem',
+            }}
+            onMouseEnter={(e) => onRate && (e.currentTarget.style.color = '#fcd34d')}
+            onMouseLeave={(e) => onRate && (e.currentTarget.style.color = star <= currentRating ? '#fbbf24' : 'var(--muted)')}
           >
             ★
           </button>
@@ -86,39 +109,75 @@ export default function FeedbackPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-blue-950">
-      <nav className="sticky top-0 border-b border-zinc-200 dark:border-blue-800 bg-white/80 dark:bg-blue-950/80 backdrop-blur">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-black dark:text-white">Feedback</h1>
-          <a href="/" className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
-            ← Back to Portfolio
-          </a>
+    <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--foreground)' }}>
+      {/* Navigation */}
+      <nav style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
+        borderBottom: '1px solid var(--border)',
+        background: 'rgba(10, 15, 30, 0.9)',
+        backdropFilter: 'blur(12px)',
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '1rem 1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: '700', margin: 0 }}>
+              Feedback
+            </h1>
+            <a
+              href="/"
+              style={{ color: 'var(--primary)', fontSize: '0.95rem', fontWeight: '500', textDecoration: 'none' }}
+              
+            >
+              Back to Portfolio
+            </a>
+          </div>
         </div>
       </nav>
 
-      <main className="max-w-4xl mx-auto px-6 py-12">
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-black dark:text-white mb-6">
+      <main style={{ maxWidth: '900px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+        {/* Submit Feedback Form */}
+        <section style={{ marginBottom: '5rem' }}>
+          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: '700', marginBottom: '1.5rem' }}>
             Leave Your Feedback
           </h2>
           
           {submitSuccess && (
-            <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-              <p className="text-green-800 dark:text-green-400 font-medium">
+            <div style={{
+              marginBottom: '1.5rem',
+              padding: '1rem',
+              background: 'rgba(16, 185, 129, 0.1)',
+              border: '1px solid var(--success)',
+              borderRadius: 'var(--radius-md)',
+              animation: 'slideInFromLeft 0.3s ease-out'
+            }}>
+              <p style={{ color: 'var(--success)', fontWeight: '500', margin: 0 }}>
                 ✅ Thank you! Your feedback has been submitted and is pending approval.
               </p>
             </div>
           )}
 
           {error && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-              <p className="text-red-800 dark:text-red-400 font-medium">{error}</p>
+            <div style={{
+              marginBottom: '1.5rem',
+              padding: '1rem',
+              background: 'rgba(239, 68, 68, 0.1)',
+              border: '1px solid var(--error)',
+              borderRadius: 'var(--radius-md)',
+              animation: 'slideInFromLeft 0.3s ease-out'
+            }}>
+              <p style={{ color: 'var(--error)', fontWeight: '500', margin: 0 }}>{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6 bg-gray-50 dark:bg-blue-900/30 p-8 rounded-lg">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <form onSubmit={handleSubmit} className="card" style={{ padding: '2rem' }}>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                marginBottom: '0.5rem'
+              }}>
                 Your Name *
               </label>
               <input
@@ -127,14 +186,18 @@ export default function FeedbackPage() {
                 onChange={(e) => setName(e.target.value)}
                 required
                 maxLength={100}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                 placeholder="John Doe"
                 disabled={isSubmitting}
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                marginBottom: '0.5rem'
+              }}>
                 Email (Optional)
               </label>
               <input
@@ -142,21 +205,30 @@ export default function FeedbackPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 maxLength={100}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                 placeholder="john@example.com"
                 disabled={isSubmitting}
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                marginBottom: '0.5rem'
+              }}>
                 Rating
               </label>
               <StarRating rating={rating} onRate={setRating} />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{
+                display: 'block',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                marginBottom: '0.5rem'
+              }}>
                 Your Message *
               </label>
               <textarea
@@ -165,11 +237,10 @@ export default function FeedbackPage() {
                 required
                 maxLength={1000}
                 rows={6}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                 placeholder="Share your thoughts..."
                 disabled={isSubmitting}
               />
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p style={{ fontSize: '0.85rem', color: 'var(--muted)', marginTop: '0.5rem', marginBottom: 0 }}>
                 {message.length}/1000 characters
               </p>
             </div>
@@ -177,41 +248,57 @@ export default function FeedbackPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn"
+              style={{
+                width: '100%',
+                padding: '1rem',
+                background: isSubmitting ? 'var(--muted)' : 'var(--primary)',
+                color: 'white',
+                border: 'none',
+                borderRadius: 'var(--radius-lg)',
+                cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                fontWeight: '600',
+                fontSize: '1rem',
+                opacity: isSubmitting ? 0.6 : 1,
+              }}
             >
               {isSubmitting ? "Submitting..." : "Submit Feedback"}
             </button>
           </form>
         </section>
 
+        {/* Approved Feedback */}
         <section>
-          <h2 className="text-3xl font-bold text-black dark:text-white mb-6">
+          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: '700', marginBottom: '1.5rem' }}>
             What Others Are Saying
           </h2>
 
           {approvedFeedback.length === 0 ? (
-            <p className="text-gray-600 dark:text-gray-400 text-center py-12">
-              No feedback yet. Be the first to leave a comment!
-            </p>
+            <div className="card" style={{ padding: '3rem', textAlign: 'center' }}>
+              <p style={{ color: 'var(--muted)', fontSize: '1.1rem', margin: 0 }}>
+                No feedback yet. Be the first to leave a comment!
+              </p>
+            </div>
           ) : (
-            <div className="space-y-6">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               {approvedFeedback.map((feedback) => (
-                <div
-                  key={feedback.id}
-                  className="p-6 bg-white dark:bg-blue-900/30 border border-gray-200 dark:border-blue-800 rounded-lg"
-                >
-                  <div className="flex justify-between items-start mb-3">
+                <div key={feedback.id} className="card" style={{ padding: '1.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', flexWrap: 'wrap', gap: '1rem' }}>
                     <div>
-                      <h3 className="font-semibold text-lg text-black dark:text-white">
+                      <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.25rem' }}>
                         {feedback.name}
                       </h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {new Date(feedback.created_at).toLocaleDateString()}
+                      <p style={{ fontSize: '0.875rem', color: 'var(--muted)', margin: 0 }}>
+                        {new Date(feedback.created_at).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
                       </p>
                     </div>
                     {feedback.rating && <StarRating rating={feedback.rating} />}
                   </div>
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  <p style={{ color: 'var(--foreground)', lineHeight: '1.7', margin: 0 }}>
                     {feedback.message}
                   </p>
                 </div>
@@ -220,6 +307,20 @@ export default function FeedbackPage() {
           )}
         </section>
       </main>
+
+      {/* Footer */}
+      <footer style={{
+        borderTop: '1px solid var(--border)',
+        padding: '2rem 1.5rem',
+        textAlign: 'center',
+        color: 'var(--muted)',
+        fontSize: '0.9rem',
+        marginTop: '5rem',
+      }}>
+        <p style={{ margin: 0 }}>
+          <a href="/" style={{ color: 'var(--primary)', textDecoration: 'none' }}>← Back to Portfolio</a>
+        </p>
+      </footer>
     </div>
   );
 }

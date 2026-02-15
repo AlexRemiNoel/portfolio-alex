@@ -1,7 +1,9 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com';
 
 interface Feedback {
   id: number;
@@ -38,7 +40,7 @@ export default function AdminFeedbackPage() {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/auth/me", {
+      const response = await fetch(`${API_URL}/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -59,10 +61,10 @@ export default function AdminFeedbackPage() {
   const loadFeedback = async () => {
     const token = localStorage.getItem("access_token");
     const endpoint = filter === "pending" 
-      ? "http://localhost:8000/feedback/pending"
+      ? `${API_URL}/feedback/pending`
       : filter === "approved"
-      ? "http://localhost:8000/feedback/approved"
-      : "http://localhost:8000/feedback/all";
+      ? `${API_URL}/feedback/approved`
+      : `${API_URL}/feedback/all`;
 
     try {
       const response = await fetch(endpoint, {
@@ -84,7 +86,7 @@ export default function AdminFeedbackPage() {
     const token = localStorage.getItem("access_token");
 
     try {
-      const response = await fetch(`http://localhost:8000/feedback/${id}/approve`, {
+      const response = await fetch(`${API_URL}/feedback/${id}/approve`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -109,7 +111,7 @@ export default function AdminFeedbackPage() {
     const token = localStorage.getItem("access_token");
 
     try {
-      const response = await fetch(`http://localhost:8000/feedback/${id}`, {
+      const response = await fetch(`${API_URL}/feedback/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -124,24 +126,17 @@ export default function AdminFeedbackPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-blue-950 flex items-center justify-center">
-        <p className="text-gray-600 dark:text-gray-400">Loading...</p>
-      </div>
-    );
-  }
-
   const StarRating = ({ rating }: { rating?: number }) => {
     if (!rating) return null;
     return (
-      <div className="flex gap-1">
+      <div style={{ display: 'flex', gap: '0.25rem' }}>
         {[1, 2, 3, 4, 5].map((star) => (
           <span
             key={star}
-            className={`text-xl ${
-              star <= rating ? "text-yellow-400" : "text-gray-300 dark:text-gray-600"
-            }`}
+            style={{
+              fontSize: '1.25rem',
+              color: star <= rating ? '#fbbf24' : 'var(--muted)',
+            }}
           >
             ★
           </span>
@@ -150,53 +145,126 @@ export default function AdminFeedbackPage() {
     );
   };
 
+  if (isLoading) {
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        background: 'var(--background)', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center' 
+      }}>
+        <div className="animate-pulse" style={{ color: 'var(--foreground)' }}>
+          Loading...
+        </div>
+      </div>
+    );
+  }
+
+  const pendingCount = allFeedback.filter(f => !f.is_approved).length;
+  const approvedCount = allFeedback.filter(f => f.is_approved).length;
+
   return (
-    <div className="min-h-screen bg-white dark:bg-blue-950">
-      <nav className="sticky top-0 border-b border-zinc-200 dark:border-blue-800 bg-white/80 dark:bg-blue-950/80 backdrop-blur">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-black dark:text-white">
-            Feedback Management
-          </h1>
-          
-          <a
-            href="/"
-            className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
-          >
-            ← Back to Portfolio
-          </a>
+    <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--foreground)' }}>
+      {/* Navigation */}
+      <nav style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
+        borderBottom: '1px solid var(--border)',
+        background: 'rgba(10, 15, 30, 0.9)',
+        backdropFilter: 'blur(12px)',
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '1rem 1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: '700', margin: 0 }}>
+              Feedback Management
+            </h1>
+            <a
+              href="/"
+              style={{ color: 'var(--primary)', fontSize: '0.95rem', fontWeight: '500', textDecoration: 'none' }}
+            >
+              ← Back to Portfolio
+            </a>
+          </div>
         </div>
       </nav>
 
-      <main className="max-w-6xl mx-auto px-6 py-12">
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         {/* Filter Tabs */}
-        <div className="flex gap-4 mb-8 border-b border-gray-200 dark:border-gray-700">
+        <div style={{ 
+          display: 'flex', 
+          gap: '1rem', 
+          marginBottom: '2rem', 
+          borderBottom: '2px solid var(--border)',
+          flexWrap: 'wrap'
+        }}>
           <button
             onClick={() => setFilter("pending")}
-            className={`pb-3 px-4 font-medium transition ${
-              filter === "pending"
-                ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
-                : "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
-            }`}
+            style={{
+              padding: '0.75rem 1rem',
+              fontWeight: '600',
+              fontSize: '0.95rem',
+              background: 'none',
+              border: 'none',
+              borderBottom: filter === "pending" ? '3px solid var(--primary)' : '3px solid transparent',
+              color: filter === "pending" ? 'var(--primary)' : 'var(--muted)',
+              cursor: 'pointer',
+              transition: 'var(--transition-fast)',
+              marginBottom: '-2px',
+            }}
+            onMouseEnter={(e) => {
+              if (filter !== "pending") e.currentTarget.style.color = 'var(--foreground)';
+            }}
+            onMouseLeave={(e) => {
+              if (filter !== "pending") e.currentTarget.style.color = 'var(--muted)';
+            }}
           >
-            Pending ({allFeedback.filter(f => !f.is_approved).length})
+            Pending ({pendingCount})
           </button>
           <button
             onClick={() => setFilter("approved")}
-            className={`pb-3 px-4 font-medium transition ${
-              filter === "approved"
-                ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
-                : "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
-            }`}
+            style={{
+              padding: '0.75rem 1rem',
+              fontWeight: '600',
+              fontSize: '0.95rem',
+              background: 'none',
+              border: 'none',
+              borderBottom: filter === "approved" ? '3px solid var(--primary)' : '3px solid transparent',
+              color: filter === "approved" ? 'var(--primary)' : 'var(--muted)',
+              cursor: 'pointer',
+              transition: 'var(--transition-fast)',
+              marginBottom: '-2px',
+            }}
+            onMouseEnter={(e) => {
+              if (filter !== "approved") e.currentTarget.style.color = 'var(--foreground)';
+            }}
+            onMouseLeave={(e) => {
+              if (filter !== "approved") e.currentTarget.style.color = 'var(--muted)';
+            }}
           >
-            Approved ({allFeedback.filter(f => f.is_approved).length})
+            Approved ({approvedCount})
           </button>
           <button
             onClick={() => setFilter("all")}
-            className={`pb-3 px-4 font-medium transition ${
-              filter === "all"
-                ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
-                : "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
-            }`}
+            style={{
+              padding: '0.75rem 1rem',
+              fontWeight: '600',
+              fontSize: '0.95rem',
+              background: 'none',
+              border: 'none',
+              borderBottom: filter === "all" ? '3px solid var(--primary)' : '3px solid transparent',
+              color: filter === "all" ? 'var(--primary)' : 'var(--muted)',
+              cursor: 'pointer',
+              transition: 'var(--transition-fast)',
+              marginBottom: '-2px',
+            }}
+            onMouseEnter={(e) => {
+              if (filter !== "all") e.currentTarget.style.color = 'var(--foreground)';
+            }}
+            onMouseLeave={(e) => {
+              if (filter !== "all") e.currentTarget.style.color = 'var(--muted)';
+            }}
           >
             All ({allFeedback.length})
           </button>
@@ -204,69 +272,160 @@ export default function AdminFeedbackPage() {
 
         {/* Feedback List */}
         {allFeedback.length === 0 ? (
-          <p className="text-center text-gray-600 dark:text-gray-400 py-12">
-            No feedback in this category.
-          </p>
+          <div className="card" style={{ padding: '3rem', textAlign: 'center' }}>
+            <p style={{ color: 'var(--muted)', fontSize: '1.1rem', margin: 0 }}>
+              No feedback in this category.
+            </p>
+          </div>
         ) : (
-          <div className="space-y-6">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {allFeedback.map((feedback) => (
               <div
                 key={feedback.id}
-                className={`p-6 border rounded-lg ${
-                  feedback.is_approved
-                    ? "bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-800"
-                    : "bg-yellow-50 dark:bg-yellow-900/10 border-yellow-200 dark:border-yellow-800"
-                }`}
+                className="card"
+                style={{
+                  padding: '1.5rem',
+                  border: `2px solid ${feedback.is_approved ? 'var(--success)' : 'var(--warning)'}`,
+                  background: feedback.is_approved 
+                    ? 'rgba(16, 185, 129, 0.05)' 
+                    : 'rgba(251, 191, 36, 0.05)',
+                }}
               >
-                <div className="flex justify-between items-start mb-4">
+                <div style={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'flex-start', 
+                  marginBottom: '1rem',
+                  flexWrap: 'wrap',
+                  gap: '1rem'
+                }}>
                   <div>
-                    <h3 className="font-semibold text-lg text-black dark:text-white">
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.25rem' }}>
                       {feedback.name}
                     </h3>
                     {feedback.email && (
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p style={{ fontSize: '0.9rem', color: 'var(--muted)', marginBottom: '0.25rem' }}>
                         {feedback.email}
                       </p>
                     )}
-                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-                      {new Date(feedback.created_at).toLocaleString()}
+                    <p style={{ fontSize: '0.875rem', color: 'var(--muted)', margin: 0 }}>
+                      {new Date(feedback.created_at).toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
                     </p>
                   </div>
                   <StarRating rating={feedback.rating} />
                 </div>
 
-                <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+                <p style={{ color: 'var(--foreground)', lineHeight: '1.7', marginBottom: '1.5rem' }}>
                   {feedback.message}
                 </p>
 
-                <div className="flex gap-3">
+                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
                   {!feedback.is_approved ? (
                     <button
                       onClick={() => handleApprove(feedback.id, true)}
-                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition"
+                      className="btn"
+                      style={{
+                        padding: '0.625rem 1.25rem',
+                        background: 'var(--success)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: 'var(--radius-md)',
+                        cursor: 'pointer',
+                        fontWeight: '600',
+                        fontSize: '0.9rem',
+                        transition: 'var(--transition-base)',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                     >
                       ✓ Approve
                     </button>
                   ) : (
                     <button
                       onClick={() => handleApprove(feedback.id, false)}
-                      className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg text-sm font-medium transition"
+                      className="btn"
+                      style={{
+                        padding: '0.625rem 1.25rem',
+                        background: 'var(--warning)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: 'var(--radius-md)',
+                        cursor: 'pointer',
+                        fontWeight: '600',
+                        fontSize: '0.9rem',
+                        transition: 'var(--transition-base)',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
                     >
                       Unapprove
                     </button>
                   )}
                   <button
                     onClick={() => handleDelete(feedback.id)}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition"
+                    className="btn"
+                    style={{
+                      padding: '0.625rem 1.25rem',
+                      background: 'var(--error)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: 'var(--radius-md)',
+                      cursor: 'pointer',
+                      fontWeight: '600',
+                      fontSize: '0.9rem',
+                      transition: 'var(--transition-base)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
                   >
                     Delete
-                    </button>
+                  </button>
                 </div>
               </div>
             ))}
           </div>
         )}
       </main>
+
+      {/* Footer */}
+      <footer style={{
+        borderTop: '1px solid var(--border)',
+        padding: '2rem 1.5rem',
+        textAlign: 'center',
+        color: 'var(--muted)',
+        fontSize: '0.9rem',
+        marginTop: '5rem',
+      }}>
+        <p style={{ margin: 0 }}>
+          <a href="/" style={{ color: 'var(--primary)', textDecoration: 'none' }}>← Back to Portfolio</a>
+          {' • '}
+          <a href="/feedback" style={{ color: 'var(--primary)', textDecoration: 'none' }}>Public Feedback</a>
+        </p>
+      </footer>
     </div>
   );
 }

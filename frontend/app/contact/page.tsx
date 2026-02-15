@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com';
+
 export default function ContactPage() {
   const router = useRouter();
   const [name, setName] = useState("");
@@ -15,21 +17,20 @@ export default function ContactPage() {
   const [portfolioEmail, setPortfolioEmail] = useState("");
 
   useEffect(() => {
-    // Load portfolio to get contact email
-    const loadPortfolio = async () => {
-      try {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-        const response = await fetch(`${API_URL}/portfolio`);
-        if (response.ok) {
-          const data = await response.json();
-          setPortfolioEmail(data.data.contact.email || "");
-        }
-      } catch (err) {
-        console.error("Failed to load portfolio email:", err);
-      }
-    };
     loadPortfolio();
   }, []);
+
+  const loadPortfolio = async () => {
+    try {
+      const response = await fetch(`${API_URL}/portfolio`);
+      if (response.ok) {
+        const data = await response.json();
+        setPortfolioEmail(data.data.contact.email || "");
+      }
+    } catch (err) {
+      console.error("Failed to load portfolio email:", err);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +39,6 @@ export default function ContactPage() {
     setSubmitSuccess(false);
 
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       const response = await fetch(`${API_URL}/contact/send-email`, {
         method: "POST",
         headers: {
@@ -74,26 +74,48 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-blue-950">
+    <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--foreground)' }}>
       {/* Navigation */}
-      <nav className="sticky top-0 border-b border-zinc-200 dark:border-blue-800 bg-white/80 dark:bg-blue-950/80 backdrop-blur z-50">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-black dark:text-white">Contact Me</h1>
-         <a 
-            href="/"
-            className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
-          >
-            ← Back to Portfolio
-          </a>
+      <nav style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
+        borderBottom: '1px solid var(--border)',
+        background: 'rgba(10, 15, 30, 0.9)',
+        backdropFilter: 'blur(12px)',
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '1rem 1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: '700', margin: 0 }}>
+              Contact Me
+            </h1>
+            <a
+              href="/"
+              style={{ color: 'var(--primary)', fontSize: '0.95rem', fontWeight: '500', textDecoration: 'none' }}
+            >
+              Back to Portfolio
+            </a>
+          </div>
         </div>
       </nav>
 
-      <main className="max-w-2xl mx-auto px-6 py-12">
+      <main style={{ maxWidth: '700px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         {submitSuccess ? (
-          <div className="text-center py-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full mb-6">
+          <div style={{ textAlign: 'center', padding: '3rem 0', animation: 'fadeIn 0.6s ease-out' }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '80px',
+              height: '80px',
+              background: 'var(--success)',
+              borderRadius: '50%',
+              marginBottom: '2rem',
+              boxShadow: 'var(--shadow-lg)',
+              animation: 'scaleIn 0.5s ease-out'
+            }}>
               <svg
-                className="w-8 h-8 text-green-600 dark:text-green-400"
+                style={{ width: '40px', height: '40px', color: 'white' }}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -101,50 +123,94 @@ export default function ContactPage() {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
+                  strokeWidth={3}
                   d="M5 13l4 4L19 7"
                 />
               </svg>
             </div>
-            <h2 className="text-3xl font-bold text-black dark:text-white mb-4">
+            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: '700', marginBottom: '1rem' }}>
               Message Sent!
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-8">
+            <p style={{ color: 'var(--muted)', fontSize: '1.125rem', marginBottom: '2rem' }}>
               Thank you for reaching out. I'll get back to you soon!
             </p>
             <a
               href="/"
-              className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
+              className="btn"
+              style={{
+                display: 'inline-block',
+                padding: '0.875rem 2rem',
+                background: 'var(--primary)',
+                color: 'white',
+                borderRadius: 'var(--radius-lg)',
+                fontWeight: '600',
+                textDecoration: 'none',
+                transition: 'var(--transition-base)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--primary-hover)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'var(--primary)';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
             >
               Back to Portfolio
             </a>
           </div>
         ) : (
           <>
-            <h2 className="text-3xl font-bold text-black dark:text-white mb-6">
-              Get in Touch
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-8">
-              Have a question or want to work together? Send me a message and I'll respond as soon as possible!
-            </p>
+            <div style={{ marginBottom: '3rem', animation: 'fadeIn 0.6s ease-out' }}>
+              <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: '700', marginBottom: '1rem' }}>
+                Get in Touch
+              </h2>
+              <p style={{ color: 'var(--muted)', fontSize: '1.125rem', lineHeight: '1.7' }}>
+                Have a question or want to work together? Send me a message and I'll respond as soon as possible!
+              </p>
+            </div>
 
             {portfolioEmail && (
-              <div className="mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                <p className="text-sm text-gray-700 dark:text-gray-300">
-                  Your message will be sent to: <span className="font-semibold">{portfolioEmail}</span>
+              <div style={{
+                marginBottom: '2rem',
+                padding: '1rem',
+                background: 'rgba(59, 130, 246, 0.1)',
+                border: '1px solid var(--primary)',
+                borderRadius: 'var(--radius-md)',
+                animation: 'slideInFromLeft 0.4s ease-out'
+              }}>
+                <p style={{ fontSize: '0.9rem', margin: 0 }}>
+                  Your message will be sent to:{' '}
+                  <span style={{ fontWeight: '600', color: 'var(--primary)' }}>
+                    {portfolioEmail}
+                  </span>
                 </p>
               </div>
             )}
 
             {error && (
-              <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                <p className="text-red-800 dark:text-red-400 font-medium">{error}</p>
+              <div style={{
+                marginBottom: '2rem',
+                padding: '1rem',
+                background: 'rgba(239, 68, 68, 0.1)',
+                border: '1px solid var(--error)',
+                borderRadius: 'var(--radius-md)',
+                animation: 'slideInFromLeft 0.3s ease-out'
+              }}>
+                <p style={{ color: 'var(--error)', fontWeight: '500', margin: 0 }}>{error}</p>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <form onSubmit={handleSubmit} className="card" style={{ padding: '2rem' }}>
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{
+                  display: 'block',
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  marginBottom: '0.5rem'
+                }}>
                   Your Name *
                 </label>
                 <input
@@ -153,14 +219,18 @@ export default function ContactPage() {
                   onChange={(e) => setName(e.target.value)}
                   required
                   maxLength={100}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                   placeholder="John Doe"
                   disabled={isSubmitting}
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{
+                  display: 'block',
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  marginBottom: '0.5rem'
+                }}>
                   Your Email *
                 </label>
                 <input
@@ -168,14 +238,18 @@ export default function ContactPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                   placeholder="john@example.com"
                   disabled={isSubmitting}
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{
+                  display: 'block',
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  marginBottom: '0.5rem'
+                }}>
                   Subject *
                 </label>
                 <input
@@ -184,14 +258,18 @@ export default function ContactPage() {
                   onChange={(e) => setSubject(e.target.value)}
                   required
                   maxLength={200}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                   placeholder="Project Inquiry"
                   disabled={isSubmitting}
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{
+                  display: 'block',
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  marginBottom: '0.5rem'
+                }}>
                   Your Message *
                 </label>
                 <textarea
@@ -200,11 +278,10 @@ export default function ContactPage() {
                   required
                   maxLength={2000}
                   rows={8}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                   placeholder="Tell me about your project..."
                   disabled={isSubmitting}
                 />
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                <p style={{ fontSize: '0.85rem', color: 'var(--muted)', marginTop: '0.5rem', marginBottom: 0 }}>
                   {message.length}/2000 characters
                 </p>
               </div>
@@ -212,18 +289,31 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn"
+                style={{
+                  width: '100%',
+                  padding: '1rem',
+                  background: isSubmitting ? 'var(--muted)' : 'var(--primary)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: 'var(--radius-lg)',
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                  fontWeight: '600',
+                  fontSize: '1rem',
+                  opacity: isSubmitting ? 0.6 : 1,
+                }}
               >
                 {isSubmitting ? (
-                  <span className="flex items-center justify-center">
+                  <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
                     <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      className="animate-spin"
+                      style={{ width: '20px', height: '20px' }}
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                     >
                       <circle
-                        className="opacity-25"
+                        style={{ opacity: 0.25 }}
                         cx="12"
                         cy="12"
                         r="10"
@@ -231,7 +321,7 @@ export default function ContactPage() {
                         strokeWidth="4"
                       ></circle>
                       <path
-                        className="opacity-75"
+                        style={{ opacity: 0.75 }}
                         fill="currentColor"
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
