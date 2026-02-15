@@ -168,6 +168,7 @@ def get_portfolio(db: Session = Depends(get_db)):
             "contact": {
                 "title": "Contact",
                 "message": "Let's get in touch!",
+                "email": "your@email.com",  # <--- ADD THIS LINE
                 "links": [
                     {"name": "Email", "url": "mailto:your@email.com"},
                     {"name": "GitHub", "url": "https://github.com/yourusername"}
