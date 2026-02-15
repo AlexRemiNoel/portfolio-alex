@@ -437,8 +437,11 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Contact Section */}
-        <section id="contact" className="py-20 border-t border-zinc-200 dark:border-blue-800 text-center dark:bg-blue-900/50 dark:rounded-lg dark:p-8 dark:mt-8">
+         {/* Contact Section */}
+        <section
+          id="contact"
+          className="py-20 border-t border-zinc-200 dark:border-blue-800 text-center dark:bg-blue-900/50 dark:rounded-lg dark:p-8 dark:mt-8"
+        >
           <h3 className="text-3xl font-bold text-black dark:text-white mb-6">
             {contact.title}
           </h3>
@@ -451,16 +454,100 @@ export default function Home() {
               isEditing={isEditing}
             />
           </p>
-          <div className="flex gap-6 justify-center text-sm font-medium">
+          
+          {/* Editable Email */}
+          {isEditing && (
+            <div className="mb-6 max-w-md mx-auto">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Contact Email:
+              </label>
+              <input
+                type="email"
+                value={editData.contact.email}
+                onChange={(e) => updateData(["contact", "email"], e.target.value)}
+                className="w-full px-4 py-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded-lg"
+              />
+            </div>
+          )}
+          
+          <div className="flex gap-6 justify-center text-sm font-medium flex-wrap">
             {contact.links.map((link: any, index: number) => (
-              <a key={index} href={link.url} className="text-blue-600 dark:text-blue-400 hover:underline">
-                {link.name}
-              </a>
+              <div key={index} className="relative">
+                {isEditing && (
+                  <button
+                    onClick={() => {
+                      setEditData((prevData: any) => ({
+                        ...prevData,
+                        contact: {
+                          ...prevData.contact,
+                          links: prevData.contact.links.filter((_: any, i: number) => i !== index)
+                        }
+                      }));
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold hover:bg-red-700 z-10"
+                  >
+                    ×
+                  </button>
+                )}
+                {isEditing ? (
+                  <div className="space-y-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded-lg">
+                    <input
+                      type="text"
+                      placeholder="Name (e.g., Email)"
+                      value={editData.contact.links[index].name}
+                      onChange={(e) => {
+                        setEditData((prevData: any) => {
+                          const newData = { ...prevData };
+                          newData.contact.links[index].name = e.target.value;
+                          return newData;
+                        });
+                      }}
+                      className="w-full px-3 py-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-sm"
+                    />
+                    <input
+                      type="text"
+                      placeholder="URL (e.g., mailto:you@email.com)"
+                      value={editData.contact.links[index].url}
+                      onChange={(e) => {
+                        setEditData((prevData: any) => {
+                          const newData = { ...prevData };
+                          newData.contact.links[index].url = e.target.value;
+                          return newData;
+                        });
+                      }}
+                      className="w-full px-3 py-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded text-sm"
+                    />
+                  </div>
+                ) : (
+                  <a
+                    href={link.url}
+                    className="text-blue-600 dark:text-blue-400 hover:underline"
+                  >
+                    {link.name}
+                  </a>
+                )}
+              </div>
             ))}
           </div>
-        </section>
-      </main>
-
+          
+          {isEditing && (
+            <button
+              onClick={() => {
+                setEditData((prevData: any) => ({
+                  ...prevData,
+                  contact: {
+                    ...prevData.contact,
+                    links: [...prevData.contact.links, { name: "New Link", url: "#" }]
+                  }
+                }));
+              }}
+              className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700"
+            >
+              + Add Contact Link
+            </button>
+          )}
+          </section>
+        </main>
       {/* Footer */}
       <footer className="border-t border-zinc-200 dark:border-zinc-800 py-8 text-center text-zinc-600 dark:text-zinc-400 text-sm">
         <p>© {footer.year} {footer.name}. All rights reserved.</p>
