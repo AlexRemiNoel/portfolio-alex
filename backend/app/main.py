@@ -134,7 +134,6 @@ def get_current_user_info(current_user: User = Depends(get_current_active_user))
 
 @app.get("/portfolio", response_model=PortfolioResponse)
 def get_portfolio(db: Session = Depends(get_db)):
-    """Get portfolio data (public endpoint)"""
     portfolio = db.query(Portfolio).first()
     
     if not portfolio:
@@ -144,10 +143,7 @@ def get_portfolio(db: Session = Depends(get_db)):
                 "headline": "Welcome to My Portfolio",
                 "subheadline": "I'm a developer creating amazing digital experiences."
             },
-            "about": {
-                "title": "About Me",
-                "content": "Tell your story here..."
-            },
+            "about": {"title": "About Me", "content": "Tell your story here..."},
             "skills": {
                 "title": "Skills",
                 "categories": [
@@ -157,28 +153,23 @@ def get_portfolio(db: Session = Depends(get_db)):
             },
             "projects": {
                 "title": "Projects",
-                "items": [
-                    {
-                        "name": "Sample Project",
-                        "description": "A sample project description",
-                        "projectUrl": "#",
-                        "githubUrl": "#"
-                    }
-                ]
+                "items": [{
+                    "name": "Sample Project",
+                    "description": "A sample project description",
+                    "projectUrl": "#",
+                    "githubUrl": "#"
+                }]
             },
             "contact": {
                 "title": "Contact",
                 "message": "Let's get in touch!",
-                "email": "your@email.com",  # <--- ADD THIS LINE
+                "email": "your@email.com", # <--- This is now in the DB save
                 "links": [
                     {"name": "Email", "url": "mailto:your@email.com"},
                     {"name": "GitHub", "url": "https://github.com/yourusername"}
                 ]
             },
-            "footer": {
-                "year": "2024",
-                "name": "Your Name"
-            }
+            "footer": {"year": "2024", "name": "Your Name"}
         }
         
         portfolio = Portfolio(name="default", data=json.dumps(default_data))
@@ -186,10 +177,18 @@ def get_portfolio(db: Session = Depends(get_db)):
         db.commit()
         db.refresh(portfolio)
     
+    # Get the dictionary from the JSON field
+    data_content = portfolio.get_data()
+    
+    # IMPORTANT: If your DB record is old, it might still lack 'email'.
+    # This line ensures the 'email' key exists before it hits the validator.
+    if "email" not in data_content.get("contact", {}):
+        data_content["contact"]["email"] = "your@email.com"
+
     return {
         "id": portfolio.id,
         "name": portfolio.name,
-        "data": portfolio.get_data(),
+        "data": data_content,
         "updated_at": portfolio.updated_at
     }
 
