@@ -2,17 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Root colors */
 :root {
   --background: #ffffff;
-  --foreground: #866af6;
-  --primary: #1d4ed8; /* Tailwind blue-700 */
-  --secondary: #2563eb; /* Tailwind blue-600 */
-  --accent: #10b981; /* Tailwind green-500 */
-  --muted: #f3f4f6; /* Tailwind gray-100 */
-  --border: #e5e7eb; /* Tailwind gray-200 */
+  --foreground: #1a1a1a; /* Changed from light purple for readability */
+  --primary: #1d4ed8;
+  --secondary: #2563eb;
+  --accent: #10b981;
+  --muted: #f3f4f6;
+  --border: #e5e7eb;
   --shadow: rgba(0, 0, 0, 0.1);
   --transition-speed: 0.3s;
+  
+  /* Define these so Tailwind can find them */
+  --font-geist-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-geist-mono: ui-monospace, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a; /* Use a true dark color */
+    --foreground: #ededed;
+    --primary: #3b82f6;
+    --secondary: #60a5fa;
+    --accent: #34d399;
+    --muted: #171717;
+    --border: #262626;
+    --shadow: rgba(0, 0, 0, 0.5);
+  }
 }
 
 @theme inline {
