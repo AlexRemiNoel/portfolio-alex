@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { login } from "@/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,30 +17,11 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const formData = new URLSearchParams();
-      formData.append("username", username);
-      formData.append("password", password);
-
-      const response = await fetch("http://localhost:8000/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: formData.toString(),
-        credentials: "include", // Important for cookies
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        // Store token in localStorage as backup
-        localStorage.setItem("access_token", data.access_token);
-        router.push("/");
-      } else {
-        const errorData = await response.json();
-        setError(errorData.detail || "Login failed");
-      }
-    } catch (err) {
-      setError("Failed to connect to server");
+      await login(username, password);
+      router.push("/");
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.detail || "Login failed";
+      setError(errorMessage);
       console.error("Login error:", err);
     } finally {
       setIsLoading(false);
@@ -50,7 +32,6 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-blue-950 flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-          {/* Logo/Title */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
               <svg
@@ -75,7 +56,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
               <p className="text-red-800 dark:text-red-400 text-sm font-medium">
@@ -84,7 +64,6 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
               <label
@@ -159,7 +138,6 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Footer */}
           <div className="mt-6 text-center">
             <a
               href="/"
@@ -170,10 +148,9 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Info Box */}
         <div className="mt-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Default credentials: <span className="font-mono">admin / admin123</span>
+            Default: <span className="font-mono">admin / admin123</span>
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
             (Change password after first login)

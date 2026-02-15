@@ -98,7 +98,6 @@ export default function Home() {
     setEditData(newData);
   };
 
-  // Add new skill category
   const addSkillCategory = () => {
     setEditData((prevData: any) => ({
       ...prevData,
@@ -112,7 +111,6 @@ export default function Home() {
     }));
   };
 
-  // Remove skill category
   const removeSkillCategory = (index: number) => {
     setEditData((prevData: any) => ({
       ...prevData,
@@ -123,7 +121,6 @@ export default function Home() {
     }));
   };
 
-  // Add new project
   const addProject = () => {
     setEditData((prevData: any) => ({
       ...prevData,
@@ -142,7 +139,6 @@ export default function Home() {
     }));
   };
 
-  // Remove project
   const removeProject = (index: number) => {
     setEditData((prevData: any) => ({
       ...prevData,
@@ -155,68 +151,86 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-blue-950">
+      {/* Edit/Auth Controls Bar */}
+      <div className="sticky top-0 z-50 bg-white/80 dark:bg-blue-950/80 backdrop-blur border-b border-zinc-200 dark:border-blue-800 py-3 px-6">
+        <div className="max-w-4xl mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            {isAuthenticated && (
+              <span className="text-sm text-green-600 dark:text-green-400 flex items-center gap-2">
+                <span className="w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full"></span>
+                Authenticated
+              </span>
+            )}
+          </div>
+          <div className="flex gap-3">
+            {isEditing ? (
+              <>
+                <button
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50"
+                >
+                  {isSaving ? "Saving..." : "Save Changes"}
+                </button>
+                <button
+                  onClick={handleCancel}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700"
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={handleEdit}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
+                >
+                  {isAuthenticated ? "Edit Portfolio" : "Login to Edit"}
+                </button>
+                {isAuthenticated && (
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 bg-gray-600 text-white rounded-lg font-medium hover:bg-gray-700"
+                  >
+                    Logout
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
 
-  {/* Unified Navbar */}
-<header className="sticky top-0 z-50 bg-white/80 dark:bg-blue-950/80 backdrop-blur border-b border-zinc-200 dark:border-blue-800">
-  <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-    {/* Left: Name + Auth Status */}
-    <div className="flex items-center gap-4">
-      <h1 className="text-2xl font-bold text-black dark:text-white">
-        <EditableText
-          key="name"
-          value={isEditing ? editData.name : name}
-          onChange={(value: string) => updateData(["name"], value)}
-          isEditing={isEditing}
-        />
-      </h1>
-
-      {isAuthenticated && (
-        <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-2">
-          <span className="w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full"></span>
-          Authenticated
-        </span>
-      )}
-    </div>
-
-    {/* Right: Actions */}
-    <div className="flex gap-3">
-      {isEditing ? (
-        <>
-          <button
-            onClick={handleSave}
-            disabled={isSaving}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50"
-          >
-            {isSaving ? "Saving..." : "Save"}
-          </button>
-          <button
-            onClick={handleCancel}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700"
-          >
-            Cancel
-          </button>
-        </>
-      ) : (
-        <>
-          <button
-            onClick={handleEdit}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700"
-          >
-            {isAuthenticated ? "Edit" : "Login"}
-          </button>
-          {isAuthenticated && (
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-700"
-            >
-              Logout
-            </button>
-          )}
-        </>
-      )}
-    </div>
-  </div>
-</header>
+      {/* Navigation */}
+      <nav className="sticky top-16 border-b border-zinc-200 dark:border-blue-800 bg-white/80 dark:bg-blue-950/80 backdrop-blur">
+        <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-black dark:text-white">
+            <EditableText
+              key="name"
+              value={isEditing ? editData.name : name}
+              onChange={(value: string) => updateData(["name"], value)}
+              isEditing={isEditing}
+            />
+          </h1>
+          <div className="flex gap-6 text-sm font-medium">
+            <a href="#about" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white">
+              {about.title}
+            </a>
+            <a href="#skills" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white">
+              {skills.title}
+            </a>
+            <a href="#projects" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white">
+              {projects.title}
+            </a>
+            <a href="#contact" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white">
+              {contact.title}
+            </a>
+            <a href="/feedback" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white">
+              Feedback
+            </a>
+          </div>
+        </div>
+      </nav>
 
       <main className="max-w-4xl mx-auto px-6 py-20">
         {/* Hero Section */}
@@ -247,7 +261,7 @@ export default function Home() {
             <a href="#projects" className="px-8 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium hover:opacity-90 transition">
               View My Work
             </a>
-            <a href="#contact" className="px-8 py-3 border border-black dark:border-white text-black dark:text-white rounded-lg font-medium hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">
+            <a href="/contact" className="px-8 py-3 border border-black dark:border-white text-black dark:text-white rounded-lg font-medium hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition">
               Get In Touch
             </a>
           </div>
@@ -437,7 +451,7 @@ export default function Home() {
           </div>
         </section>
 
-         {/* Contact Section */}
+        {/* Contact Section - UPDATED WITH EDITABLE CONTACTS */}
         <section
           id="contact"
           className="py-20 border-t border-zinc-200 dark:border-blue-800 text-center dark:bg-blue-900/50 dark:rounded-lg dark:p-8 dark:mt-8"
@@ -463,15 +477,16 @@ export default function Home() {
               </label>
               <input
                 type="email"
-                value={editData.contact.email}
+                value={editData.contact.email || ""}
                 onChange={(e) => updateData(["contact", "email"], e.target.value)}
+                placeholder="your@email.com"
                 className="w-full px-4 py-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded-lg"
               />
             </div>
           )}
           
-          <div className="flex gap-6 justify-center text-sm font-medium flex-wrap">
-            {contact.links.map((link: any, index: number) => (
+          <div className="flex gap-6 justify-center text-sm font-medium flex-wrap mb-8">
+            {(isEditing ? editData.contact.links : contact.links).map((link: any, index: number) => (
               <div key={index} className="relative">
                 {isEditing && (
                   <button
@@ -541,13 +556,24 @@ export default function Home() {
                   }
                 }));
               }}
-              className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700"
+              className="mb-6 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700"
             >
               + Add Contact Link
             </button>
           )}
-          </section>
-        </main>
+
+          {/* Contact Form Button */}
+          <div>
+            <a
+              href="/contact"
+              className="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
+            >
+              Send Me a Message
+            </a>
+          </div>
+        </section>
+      </main>
+
       {/* Footer */}
       <footer className="border-t border-zinc-200 dark:border-zinc-800 py-8 text-center text-zinc-600 dark:text-zinc-400 text-sm">
         <p>© {footer.year} {footer.name}. All rights reserved.</p>

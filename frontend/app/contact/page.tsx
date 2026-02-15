@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function ContactPage() {
@@ -12,6 +12,24 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [portfolioEmail, setPortfolioEmail] = useState("");
+
+  useEffect(() => {
+    // Load portfolio to get contact email
+    const loadPortfolio = async () => {
+      try {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+        const response = await fetch(`${API_URL}/portfolio`);
+        if (response.ok) {
+          const data = await response.json();
+          setPortfolioEmail(data.data.contact.email || "");
+        }
+      } catch (err) {
+        console.error("Failed to load portfolio email:", err);
+      }
+    };
+    loadPortfolio();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +38,8 @@ export default function ContactPage() {
     setSubmitSuccess(false);
 
     try {
-      const response = await fetch("http://localhost:8000/contact/send-email", {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const response = await fetch(`${API_URL}/contact/send-email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,10 +76,10 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-blue-950">
       {/* Navigation */}
-      <nav className="sticky top-0 border-b border-zinc-200 dark:border-blue-800 bg-white/80 dark:bg-blue-950/80 backdrop-blur">
+      <nav className="sticky top-0 border-b border-zinc-200 dark:border-blue-800 bg-white/80 dark:bg-blue-950/80 backdrop-blur z-50">
         <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-black dark:text-white">Contact Me</h1>
-          <a
+         <a 
             href="/"
             className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
           >
@@ -106,8 +125,16 @@ export default function ContactPage() {
               Get in Touch
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-8">
-              Have a question or want to work together? Send me a message!
+              Have a question or want to work together? Send me a message and I'll respond as soon as possible!
             </p>
+
+            {portfolioEmail && (
+              <div className="mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  Your message will be sent to: <span className="font-semibold">{portfolioEmail}</span>
+                </p>
+              </div>
+            )}
 
             {error && (
               <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">

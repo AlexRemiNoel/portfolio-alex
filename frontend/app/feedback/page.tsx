@@ -1,8 +1,7 @@
-"use client"
-
+"use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { getApprovedFeedback, submitFeedback } from "@/lib/api";
 
 interface Feedback {
   id: number;
@@ -15,7 +14,6 @@ interface Feedback {
 }
 
 export default function FeedbackPage() {
-  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -31,11 +29,8 @@ export default function FeedbackPage() {
 
   const loadApprovedFeedback = async () => {
     try {
-      const response = await fetch("http://localhost:8000/feedback/approved");
-      if (response.ok) {
-        const data = await response.json();
-        setApprovedFeedback(data);
-      }
+      const data = await getApprovedFeedback();
+      setApprovedFeedback(data);
     } catch (err) {
       console.error("Failed to load feedback:", err);
     }
@@ -48,32 +43,22 @@ export default function FeedbackPage() {
     setSubmitSuccess(false);
 
     try {
-      const response = await fetch("http://localhost:8000/feedback", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email: email || null,
-          message,
-          rating,
-        }),
+      await submitFeedback({
+        name,
+        email: email || undefined,
+        message,
+        rating,
       });
 
-      if (response.ok) {
-        setSubmitSuccess(true);
-        setName("");
-        setEmail("");
-        setMessage("");
-        setRating(5);
-        setTimeout(() => setSubmitSuccess(false), 5000);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.detail || "Failed to submit feedback");
-      }
-    } catch (err) {
-      setError("Failed to connect to server");
+      setSubmitSuccess(true);
+      setName("");
+      setEmail("");
+      setMessage("");
+      setRating(5);
+      setTimeout(() => setSubmitSuccess(false), 5000);
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.detail || "Failed to submit feedback";
+      setError(errorMessage);
       console.error("Submit error:", err);
     } finally {
       setIsSubmitting(false);
@@ -102,21 +87,16 @@ export default function FeedbackPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-blue-950">
-      {/* Navigation */}
       <nav className="sticky top-0 border-b border-zinc-200 dark:border-blue-800 bg-white/80 dark:bg-blue-950/80 backdrop-blur">
         <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-black dark:text-white">Feedback</h1>
-          <a
-            href="/"
-            className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
-          >
+          <a href="/" className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
             ← Back to Portfolio
           </a>
         </div>
       </nav>
 
       <main className="max-w-4xl mx-auto px-6 py-12">
-        {/* Submit Feedback Form */}
         <section className="mb-16">
           <h2 className="text-3xl font-bold text-black dark:text-white mb-6">
             Leave Your Feedback
@@ -204,7 +184,6 @@ export default function FeedbackPage() {
           </form>
         </section>
 
-        {/* Approved Feedback */}
         <section>
           <h2 className="text-3xl font-bold text-black dark:text-white mb-6">
             What Others Are Saying
@@ -241,6 +220,6 @@ export default function FeedbackPage() {
           )}
         </section>
       </main>
-      </div>
+    </div>
   );
 }
