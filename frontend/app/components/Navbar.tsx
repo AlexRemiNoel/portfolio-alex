@@ -75,11 +75,12 @@ export function Navbar({
               )}
             </a>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation — pushed to the right with marginLeft: auto */}
             {showFullNav && (
               <div
                 style={{
                   display: "none",
+                  marginLeft: "auto",
                 }}
                 className="navbar-desktop"
               >
@@ -160,6 +161,49 @@ export function Navbar({
                       {t("navigation.admin")}
                     </a>
                   )}
+
+                  {/* Language Selector (desktop) */}
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "0.25rem",
+                      alignItems: "center",
+                    }}
+                  >
+                    <button
+                      onClick={() => setLanguage("en")}
+                      style={{
+                        padding: "0.4rem 0.6rem",
+                        background:
+                          language === "en" ? "var(--primary)" : "var(--border)",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        fontWeight: "600",
+                        fontSize: "0.75rem",
+                      }}
+                    >
+                      EN
+                    </button>
+                    <button
+                      onClick={() => setLanguage("fr")}
+                      style={{
+                        padding: "0.4rem 0.6rem",
+                        background:
+                          language === "fr" ? "var(--primary)" : "var(--border)",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        fontWeight: "600",
+                        fontSize: "0.75rem",
+                      }}
+                    >
+                      FR
+                    </button>
+                  </div>
+
                   {!isEditing && (
                     <>
                       {isAuthenticated ? (
@@ -220,7 +264,7 @@ export function Navbar({
               </div>
             )}
 
-            {/* Language Selector & Mobile Menu Button */}
+            {/* Mobile Menu Button (only visible on mobile) */}
             {showFullNav && (
               <div
                 style={{
@@ -229,6 +273,7 @@ export function Navbar({
                   alignItems: "center",
                   marginLeft: "auto",
                 }}
+                className="mobile-controls"
               >
                 <div
                   style={{
@@ -275,7 +320,6 @@ export function Navbar({
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                   style={{
-                    display: "none",
                     background: "none",
                     border: "none",
                     cursor: "pointer",
@@ -460,7 +504,7 @@ export function Navbar({
           .navbar-desktop {
             display: flex !important;
           }
-          .mobile-menu-btn {
+          .mobile-controls {
             display: none !important;
           }
         }
@@ -469,8 +513,8 @@ export function Navbar({
           .navbar-desktop {
             display: none !important;
           }
-          .mobile-menu-btn {
-            display: block !important;
+          .mobile-controls {
+            display: flex !important;
           }
         }
       `}</style>

@@ -233,6 +233,32 @@ button:active {
   transform: translateY(-4px);
 }
 
+/* Project card specific hover */
+.project-card {
+  background: var(--card);
+  border: 2px solid var(--border);
+}
+
+.project-card:hover {
+  background: var(--card-hover);
+  border-color: var(--primary);
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2), 0 4px 6px -2px rgba(59, 130, 246, 0.1);
+  transform: translateY(-6px);
+}
+
+/* Skill card specific hover */
+.skill-card {
+  background: var(--card);
+  border: 2px solid var(--border);
+}
+
+.skill-card:hover {
+  background: var(--card-hover);
+  border-color: var(--primary);
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2), 0 4px 6px -2px rgba(59, 130, 246, 0.1);
+  transform: translateY(-6px);
+}
+
 /* ============================================
    INPUT STYLES
    ============================================ */
@@ -533,6 +559,29 @@ nav a:hover {
 
 ::-moz-selection {
   background: var(--primary);
+  color: white;
+}
+
+/* Component selection styles */
+.card::selection,
+.card *::selection {
+  background: var(--secondary);
+  color: white;
+}
+
+.card ::-moz-selection {
+  background: var(--secondary);
+  color: white;
+}
+
+form::selection,
+form *::selection {
+  background: var(--accent);
+  color: white;
+}
+
+form ::-moz-selection {
+  background: var(--accent);
   color: white;
 }
 

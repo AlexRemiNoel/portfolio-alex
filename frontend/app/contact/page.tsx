@@ -78,7 +78,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--foreground)' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, var(--background) 0%, rgba(0,0,0,0.03) 100%)', color: 'var(--foreground)' }}>
       {/* Navigation */}
       <Navbar
         isAuthenticated={false}

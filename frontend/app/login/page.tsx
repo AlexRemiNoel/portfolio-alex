@@ -53,7 +53,7 @@ export default function LoginPage() {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      background: 'var(--background)', 
+      background: 'linear-gradient(180deg, var(--background) 0%, rgba(0,0,0,0.03) 100%)', 
       color: 'var(--foreground)',
       display: 'flex',
       flexDirection: 'column',

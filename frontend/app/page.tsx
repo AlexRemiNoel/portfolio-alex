@@ -265,7 +265,7 @@ export default function Home() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--foreground)' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, var(--background) 0%, rgba(0,0,0,0.03) 100%)', color: 'var(--foreground)' }}>
       {/* Navigation */}
       <Navbar
         isAuthenticated={isAuthenticated}
@@ -377,7 +377,7 @@ export default function Home() {
           </h3>
           <div className="grid-2">
             {skills.categories.map((category: any, index: number) => (
-              <div key={index} className="card" style={{ position: 'relative' }}>
+              <div key={index} className="card skill-card" style={{ position: 'relative' }}>
                 {isEditing && (
                   <button
                     onClick={() => removeSkillCategory(index)}
@@ -469,7 +469,7 @@ export default function Home() {
           </h3>
           <div className="grid-2">
             {projects.items.map((project: any, index: number) => (
-              <div key={index} className="card" style={{ position: 'relative' }}>
+              <div key={index} className="card project-card" style={{ position: 'relative' }}>
                 {isEditing && (
                   <button
                     onClick={() => removeProject(index)}
