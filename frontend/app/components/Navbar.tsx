@@ -216,52 +216,6 @@ export function Navbar({
                       )}
                     </>
                   )}
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                      borderLeft: "1px solid var(--border)",
-                      paddingLeft: "1rem",
-                    }}
-                  >
-                    <button
-                      onClick={() => setLanguage("en")}
-                      style={{
-                        padding: "0.5rem 0.75rem",
-                        background:
-                          language === "en"
-                            ? "var(--primary)"
-                            : "var(--border)",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        fontWeight: "600",
-                        fontSize: "0.85rem",
-                      }}
-                    >
-                      EN
-                    </button>
-                    <button
-                      onClick={() => setLanguage("fr")}
-                      style={{
-                        padding: "0.5rem 0.75rem",
-                        background:
-                          language === "fr"
-                            ? "var(--primary)"
-                            : "var(--border)",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        fontWeight: "600",
-                        fontSize: "0.85rem",
-                      }}
-                    >
-                      FR
-                    </button>
-                  </div>
                 </div>
               </div>
             )}
