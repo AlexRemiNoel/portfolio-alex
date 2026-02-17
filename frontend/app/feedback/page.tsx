@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLanguage } from "../lib/i18n";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com';
 
@@ -15,6 +16,7 @@ interface Feedback {
 }
 
 export default function FeedbackPage() {
+  const { t } = useLanguage();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -69,10 +71,10 @@ export default function FeedbackPage() {
         setTimeout(() => setSubmitSuccess(false), 5000);
         loadApprovedFeedback();
       } else {
-        const errorData = await response.json();
-        setError(errorData.detail || "Failed to submit feedback");
+        const errorData = await respot('feedback.failedToSend'));
       }
     } catch (err) {
+      setError(t('login.serverError')
       setError("Failed to connect to server");
       console.error("Submit error:", err);
     } finally {
@@ -122,14 +124,14 @@ export default function FeedbackPage() {
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '1rem 1.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: '700', margin: 0 }}>
-              Feedback
+              {t('feedback.title')}
             </h1>
             <a
               href="/"
               style={{ color: 'var(--primary)', fontSize: '0.95rem', fontWeight: '500', textDecoration: 'none' }}
               
             >
-              Back to Portfolio
+              {t('common.back')}
             </a>
           </div>
         </div>
@@ -139,7 +141,7 @@ export default function FeedbackPage() {
         {/* Submit Feedback Form */}
         <section style={{ marginBottom: '5rem' }}>
           <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: '700', marginBottom: '1.5rem' }}>
-            Leave Your Feedback
+            {t('feedback.leaveTitle')}
           </h2>
           
           {submitSuccess && (
@@ -152,7 +154,7 @@ export default function FeedbackPage() {
               animation: 'slideInFromLeft 0.3s ease-out'
             }}>
               <p style={{ color: 'var(--success)', fontWeight: '500', margin: 0 }}>
-                ✅ Thank you! Your feedback has been submitted and is pending approval.
+                {t('feedback.success')}
               </p>
             </div>
           )}
@@ -178,7 +180,7 @@ export default function FeedbackPage() {
                 fontWeight: '600',
                 marginBottom: '0.5rem'
               }}>
-                Your Name *
+                {t('feedback.name')}
               </label>
               <input
                 type="text"
@@ -186,7 +188,7 @@ export default function FeedbackPage() {
                 onChange={(e) => setName(e.target.value)}
                 required
                 maxLength={100}
-                placeholder="John Doe"
+                placeholder={t('feedback.namePlaceholder')}
                 disabled={isSubmitting}
               />
             </div>
@@ -198,14 +200,14 @@ export default function FeedbackPage() {
                 fontWeight: '600',
                 marginBottom: '0.5rem'
               }}>
-                Email (Optional)
+                {t('feedback.email')}
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 maxLength={100}
-                placeholder="john@example.com"
+                placeholder={t('feedback.emailPlaceholder')}
                 disabled={isSubmitting}
               />
             </div>
@@ -217,7 +219,7 @@ export default function FeedbackPage() {
                 fontWeight: '600',
                 marginBottom: '0.5rem'
               }}>
-                Rating
+                {t('feedback.rating')}
               </label>
               <StarRating rating={rating} onRate={setRating} />
             </div>
@@ -229,7 +231,7 @@ export default function FeedbackPage() {
                 fontWeight: '600',
                 marginBottom: '0.5rem'
               }}>
-                Your Message *
+                {t('feedback.message')}
               </label>
               <textarea
                 value={message}
@@ -237,11 +239,11 @@ export default function FeedbackPage() {
                 required
                 maxLength={1000}
                 rows={6}
-                placeholder="Share your thoughts..."
+                placeholder={t('feedback.messagePlaceholder')}
                 disabled={isSubmitting}
               />
               <p style={{ fontSize: '0.85rem', color: 'var(--muted)', marginTop: '0.5rem', marginBottom: 0 }}>
-                {message.length}/1000 characters
+                {message.length}{t('feedback.charactersOf')}
               </p>
             </div>
 
@@ -262,7 +264,7 @@ export default function FeedbackPage() {
                 opacity: isSubmitting ? 0.6 : 1,
               }}
             >
-              {isSubmitting ? "Submitting..." : "Submit Feedback"}
+              {isSubmitting ? t('common.submitting') : t('feedback.submitButton')}
             </button>
           </form>
         </section>
@@ -270,13 +272,13 @@ export default function FeedbackPage() {
         {/* Approved Feedback */}
         <section>
           <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: '700', marginBottom: '1.5rem' }}>
-            What Others Are Saying
+            {t('feedback.whatOthersSay')}
           </h2>
 
           {approvedFeedback.length === 0 ? (
             <div className="card" style={{ padding: '3rem', textAlign: 'center' }}>
               <p style={{ color: 'var(--muted)', fontSize: '1.1rem', margin: 0 }}>
-                No feedback yet. Be the first to leave a comment!
+                {t('feedback.noFeedback')}
               </p>
             </div>
           ) : (
@@ -318,7 +320,7 @@ export default function FeedbackPage() {
         marginTop: '5rem',
       }}>
         <p style={{ margin: 0 }}>
-          <a href="/" style={{ color: 'var(--primary)', textDecoration: 'none' }}>← Back to Portfolio</a>
+          <a href="/" style={{ color: 'var(--primary)', textDecoration: 'none' }}>{t('common.back')}</a>
         </p>
       </footer>
     </div>

@@ -75,7 +75,8 @@
     "success": "✅ Merci ! Votre retour a été soumis et est en attente d'approbation.",
     "noFeedback": "Aucun retour pour le moment. Soyez le premier à laisser un commentaire !",
     "namePlaceholder": "Jean Dupont",
-    "emailPlaceholder": "jean@exemple.com"
+    "emailPlaceholder": "jean@exemple.com",
+    "failedToSend": "Échec de la soumission du retour"
   },
   "admin": {
     "title": "Gestion des retours",

@@ -75,7 +75,8 @@
     "success": "✅ Thank you! Your feedback has been submitted and is pending approval.",
     "noFeedback": "No feedback yet. Be the first to leave a comment!",
     "namePlaceholder": "John Doe",
-    "emailPlaceholder": "john@example.com"
+    "emailPlaceholder": "john@example.com",
+    "failedToSend": "Failed to submit feedback"
   },
   "admin": {
     "title": "Feedback Management",

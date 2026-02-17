@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "../../lib/i18n";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com';
 
@@ -17,6 +18,7 @@ interface Feedback {
 
 export default function AdminFeedbackPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [allFeedback, setAllFeedback] = useState<Feedback[]>([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -104,7 +106,7 @@ export default function AdminFeedbackPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this feedback?")) {
+    if (!confirm(t('admin.deleteConfirm'))) {
       return;
     }
 
@@ -155,7 +157,7 @@ export default function AdminFeedbackPage() {
         justifyContent: 'center' 
       }}>
         <div className="animate-pulse" style={{ color: 'var(--foreground)' }}>
-          Loading...
+          {t('common.loading')}
         </div>
       </div>
     );
@@ -178,13 +180,13 @@ export default function AdminFeedbackPage() {
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '1rem 1.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
             <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: '700', margin: 0 }}>
-              Feedback Management
+              {t('admin.title')}
             </h1>
             <a
               href="/"
               style={{ color: 'var(--primary)', fontSize: '0.95rem', fontWeight: '500', textDecoration: 'none' }}
             >
-              ← Back to Portfolio
+              {t('common.back')}
             </a>
           </div>
         </div>
@@ -220,7 +222,7 @@ export default function AdminFeedbackPage() {
               if (filter !== "pending") e.currentTarget.style.color = 'var(--muted)';
             }}
           >
-            Pending ({pendingCount})
+            {t('admin.pending')} ({pendingCount})
           </button>
           <button
             onClick={() => setFilter("approved")}
@@ -243,7 +245,7 @@ export default function AdminFeedbackPage() {
               if (filter !== "approved") e.currentTarget.style.color = 'var(--muted)';
             }}
           >
-            Approved ({approvedCount})
+            {t('admin.approved')} ({approvedCount})
           </button>
           <button
             onClick={() => setFilter("all")}
@@ -266,7 +268,7 @@ export default function AdminFeedbackPage() {
               if (filter !== "all") e.currentTarget.style.color = 'var(--muted)';
             }}
           >
-            All ({allFeedback.length})
+            {t('admin.all')} ({allFeedback.length})
           </button>
         </div>
 
@@ -274,7 +276,7 @@ export default function AdminFeedbackPage() {
         {allFeedback.length === 0 ? (
           <div className="card" style={{ padding: '3rem', textAlign: 'center' }}>
             <p style={{ color: 'var(--muted)', fontSize: '1.1rem', margin: 0 }}>
-              No feedback in this category.
+              {t('admin.noFeedback')}
             </p>
           </div>
         ) : (
@@ -350,7 +352,7 @@ export default function AdminFeedbackPage() {
                         e.currentTarget.style.boxShadow = 'none';
                       }}
                     >
-                      ✓ Approve
+                      {t('admin.approve')}
                     </button>
                   ) : (
                     <button
@@ -376,7 +378,7 @@ export default function AdminFeedbackPage() {
                         e.currentTarget.style.boxShadow = 'none';
                       }}
                     >
-                      Unapprove
+                      {t('admin.unapprove')}
                     </button>
                   )}
                   <button
@@ -402,7 +404,7 @@ export default function AdminFeedbackPage() {
                       e.currentTarget.style.boxShadow = 'none';
                     }}
                   >
-                    Delete
+                    {t('admin.delete')}
                   </button>
                 </div>
               </div>
@@ -421,9 +423,9 @@ export default function AdminFeedbackPage() {
         marginTop: '5rem',
       }}>
         <p style={{ margin: 0 }}>
-          <a href="/" style={{ color: 'var(--primary)', textDecoration: 'none' }}>← Back to Portfolio</a>
+          <a href="/" style={{ color: 'var(--primary)', textDecoration: 'none' }}>{t('common.back')}</a>
           {' • '}
-          <a href="/feedback" style={{ color: 'var(--primary)', textDecoration: 'none' }}>Public Feedback</a>
+          <a href="/feedback" style={{ color: 'var(--primary)', textDecoration: 'none' }}>{t('admin.publicFeedback')}</a>
         </p>
       </footer>
     </div>

@@ -167,10 +167,10 @@ export default function ContactPage() {
           <>
             <div style={{ marginBottom: '3rem', animation: 'fadeIn 0.6s ease-out' }}>
               <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: '700', marginBottom: '1rem' }}>
-                Get in Touch
+                {t('contact.pageTitle')}
               </h2>
               <p style={{ color: 'var(--muted)', fontSize: '1.125rem', lineHeight: '1.7' }}>
-                Have a question or want to work together? Send me a message and I'll respond as soon as possible!
+                {t('contact.description')}
               </p>
             </div>
 
@@ -184,7 +184,7 @@ export default function ContactPage() {
                 animation: 'slideInFromLeft 0.4s ease-out'
               }}>
                 <p style={{ fontSize: '0.9rem', margin: 0 }}>
-                  Your message will be sent to:{' '}
+                  {t('contact.sentTo')}{' '}
                   <span style={{ fontWeight: '600', color: 'var(--primary)' }}>
                     {portfolioEmail}
                   </span>
@@ -213,7 +213,7 @@ export default function ContactPage() {
                   fontWeight: '600',
                   marginBottom: '0.5rem'
                 }}>
-                  Your Name *
+                  {t('contact.name')}
                 </label>
                 <input
                   type="text"
@@ -221,7 +221,7 @@ export default function ContactPage() {
                   onChange={(e) => setName(e.target.value)}
                   required
                   maxLength={100}
-                  placeholder="John Doe"
+                  placeholder={t('contact.namePlaceholder')}
                   disabled={isSubmitting}
                 />
               </div>
@@ -233,14 +233,14 @@ export default function ContactPage() {
                   fontWeight: '600',
                   marginBottom: '0.5rem'
                 }}>
-                  Your Email *
+                  {t('contact.email')}
                 </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="john@example.com"
+                  placeholder={t('contact.emailPlaceholder')}
                   disabled={isSubmitting}
                 />
               </div>
@@ -252,7 +252,7 @@ export default function ContactPage() {
                   fontWeight: '600',
                   marginBottom: '0.5rem'
                 }}>
-                  Subject *
+                  {t('contact.subject')}
                 </label>
                 <input
                   type="text"
@@ -260,7 +260,7 @@ export default function ContactPage() {
                   onChange={(e) => setSubject(e.target.value)}
                   required
                   maxLength={200}
-                  placeholder="Project Inquiry"
+                  placeholder={t('contact.subjectPlaceholder')}
                   disabled={isSubmitting}
                 />
               </div>
@@ -272,7 +272,7 @@ export default function ContactPage() {
                   fontWeight: '600',
                   marginBottom: '0.5rem'
                 }}>
-                  Your Message *
+                  {t('contact.message')}
                 </label>
                 <textarea
                   value={message}
@@ -280,11 +280,11 @@ export default function ContactPage() {
                   required
                   maxLength={2000}
                   rows={8}
-                  placeholder="Tell me about your project..."
+                  placeholder={t('contact.messagePlaceholder')}
                   disabled={isSubmitting}
                 />
                 <p style={{ fontSize: '0.85rem', color: 'var(--muted)', marginTop: '0.5rem', marginBottom: 0 }}>
-                  {message.length}/2000 characters
+                  {message.length}{t('contact.charactersOf')}
                 </p>
               </div>
 
@@ -328,10 +328,10 @@ export default function ContactPage() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Sending...
+                    {t('common.sending')}
                   </span>
                 ) : (
-                  "Send Message"
+                  t('contact.sendButton')
                 )}
               </button>
             </form>
