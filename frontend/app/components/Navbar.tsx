@@ -100,42 +100,6 @@ export function Navbar({
                 {t("navigation.about")}
               </a>
               <a
-                href="#skills"
-                style={{
-                  color: "var(--muted)",
-                  transition: "color 0.2s",
-                  textDecoration: "none",
-                  whiteSpace: "nowrap",
-                  flexShrink: 0,
-                }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.color = "var(--primary)")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.color = "var(--muted)")
-                }
-              >
-                {t("navigation.skills")}
-              </a>
-              <a
-                href="#projects"
-                style={{
-                  color: "var(--muted)",
-                  transition: "color 0.2s",
-                  textDecoration: "none",
-                  whiteSpace: "nowrap",
-                  flexShrink: 0,
-                }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.color = "var(--primary)")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.color = "var(--muted)")
-                }
-              >
-                {t("navigation.projects")}
-              </a>
-              <a
                 href="/contact"
                 style={{
                   color: "var(--muted)",
