@@ -13,6 +13,7 @@ interface LanguageContextType {
   setLanguage: (lang: Language) => void;
   translations: Translations;
   t: (key: string) => string;
+  isLoading: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -34,9 +35,20 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   const loadTranslations = async (lang: Language) => {
     try {
+      // Check cache first
+      const cached = localStorage.getItem(`translations_${lang}`);
+      if (cached) {
+        setTranslations(JSON.parse(cached));
+        setIsLoading(false);
+        return;
+      }
+
       const response = await fetch(`/locales/${lang}.json`);
       const data = await response.json();
       setTranslations(data);
+      
+      // Cache for future loads
+      localStorage.setItem(`translations_${lang}`, JSON.stringify(data));
       setIsLoading(false);
     } catch (error) {
       console.error(`Failed to load translations for ${lang}:`, error);
@@ -66,7 +78,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, translations, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, translations, t, isLoading }}>
       {children}
     </LanguageContext.Provider>
   );
