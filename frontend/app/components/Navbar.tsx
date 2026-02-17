@@ -82,7 +82,7 @@ export function Navbar({
               }}
             >
               <a
-                href="#about"
+                href="/"
                 style={{
                   color: "var(--muted)",
                   transition: "color 0.2s",

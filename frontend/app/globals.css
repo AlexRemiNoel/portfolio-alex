@@ -379,6 +379,24 @@ section {
 }
 
 /* ============================================
+   GRID STYLES
+   ============================================ */
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* ============================================
    UTILITY CLASSES
    ============================================ */
 
