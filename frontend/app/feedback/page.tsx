@@ -71,11 +71,10 @@ export default function FeedbackPage() {
         setTimeout(() => setSubmitSuccess(false), 5000);
         loadApprovedFeedback();
       } else {
-        const errorData = await respot('feedback.failedToSend'));
+        setError(t('feedback.failedToSend'));
       }
     } catch (err) {
-      setError(t('login.serverError')
-      setError("Failed to connect to server");
+      setError(t('login.serverError'));
       console.error("Submit error:", err);
     } finally {
       setIsSubmitting(false);
