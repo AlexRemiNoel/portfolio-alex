@@ -87,7 +87,7 @@ export default function ContactPage() {
         showFullNav={true}
       />
 
-      <main style={{ maxWidth: '700px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+      <main style={{ maxWidth: '700px', margin: '0 auto', padding: 'clamp(1.5rem, 5vw, 3rem) 1.5rem' }}>
         {submitSuccess ? (
           <div style={{ textAlign: 'center', padding: '3rem 0', animation: 'fadeIn 0.6s ease-out' }}>
             <div style={{
@@ -191,7 +191,7 @@ export default function ContactPage() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="card" style={{ padding: '2rem' }}>
+            <form onSubmit={handleSubmit} className="card" style={{ padding: 'clamp(1.5rem, 4vw, 2rem)' }}>
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{
                   display: 'block',
@@ -280,14 +280,14 @@ export default function ContactPage() {
                 className="btn"
                 style={{
                   width: '100%',
-                  padding: '1rem',
+                  padding: 'clamp(0.75rem, 2vw, 1rem)',
                   background: isSubmitting ? 'var(--muted)' : 'var(--primary)',
                   color: 'white',
                   border: 'none',
                   borderRadius: 'var(--radius-lg)',
                   cursor: isSubmitting ? 'not-allowed' : 'pointer',
                   fontWeight: '600',
-                  fontSize: '1rem',
+                  fontSize: 'clamp(0.9rem, 2vw, 1rem)',
                   opacity: isSubmitting ? 0.6 : 1,
                 }}
               >

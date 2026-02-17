@@ -22,10 +22,10 @@ export function Footer({
     <footer
       style={{
         borderTop: "1px solid var(--border)",
-        padding: "2rem 1.5rem",
+        padding: "clamp(1.5rem, 4vw, 2rem) 1.5rem",
         textAlign: "center",
         color: "var(--muted)",
-        fontSize: "0.9rem",
+        fontSize: "clamp(0.8rem, 1.5vw, 0.9rem)",
       }}
     >
       <p style={{ margin: 0 }}>

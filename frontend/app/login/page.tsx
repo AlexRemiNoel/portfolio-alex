@@ -84,11 +84,11 @@ export default function LoginPage() {
         position: 'relative',
         zIndex: 1,
         margin: 'auto',
-        padding: '1.5rem',
+        padding: 'clamp(1rem, 4vw, 1.5rem)',
       }}>
         {/* Login Card */}
         <div className="card" style={{ 
-          padding: '2.5rem',
+          padding: 'clamp(1.5rem, 5vw, 2.5rem)',
           animation: 'fadeIn 0.6s ease-out'
         }}>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -118,7 +118,7 @@ export default function LoginPage() {
               </svg>
             </div>
             <h2 style={{ 
-              fontSize: 'clamp(1.75rem, 4vw, 2.25rem)', 
+              fontSize: 'clamp(1.5rem, 5vw, 2.25rem)', 
               fontWeight: '700',
               marginBottom: '0.5rem',
             }}>
@@ -235,8 +235,8 @@ export default function LoginPage() {
               className="btn"
               style={{
                 width: '100%',
-                padding: '1rem',
-                fontSize: '1rem',
+                padding: 'clamp(0.75rem, 2vw, 1rem)',
+                fontSize: 'clamp(0.9rem, 2vw, 1rem)',
                 fontWeight: '600',
                 background: isLoading ? 'var(--muted)' : 'var(--primary)',
                 color: 'white',

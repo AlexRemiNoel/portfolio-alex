@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "../../lib/i18n";
+import { Navbar } from "../../components/Navbar";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com';
 
@@ -169,44 +170,29 @@ export default function AdminFeedbackPage() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--foreground)' }}>
       {/* Navigation */}
-      <nav style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 50,
-        borderBottom: '1px solid var(--border)',
-        background: 'rgba(10, 15, 30, 0.9)',
-        backdropFilter: 'blur(12px)',
-      }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '1rem 1.5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-            <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: '700', margin: 0 }}>
-              {t('admin.title')}
-            </h1>
-            <a
-              href="/"
-              style={{ color: 'var(--primary)', fontSize: '0.95rem', fontWeight: '500', textDecoration: 'none' }}
-            >
-              {t('common.back')}
-            </a>
-          </div>
-        </div>
-      </nav>
+      <Navbar
+        isAuthenticated={isAuthenticated}
+        isEditing={false}
+        portfolioName={t('admin.title')}
+        showFullNav={false}
+      />
 
-      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: 'clamp(1.5rem, 5vw, 3rem) 1.5rem' }}>
         {/* Filter Tabs */}
         <div style={{ 
           display: 'flex', 
-          gap: '1rem', 
+          gap: 'clamp(0.5rem, 2vw, 1rem)', 
           marginBottom: '2rem', 
           borderBottom: '2px solid var(--border)',
-          flexWrap: 'wrap'
+          flexWrap: 'wrap',
+          overflowX: 'auto'
         }}>
           <button
             onClick={() => setFilter("pending")}
             style={{
-              padding: '0.75rem 1rem',
+              padding: 'clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 2vw, 1rem)',
               fontWeight: '600',
-              fontSize: '0.95rem',
+              fontSize: 'clamp(0.85rem, 1.5vw, 0.95rem)',
               background: 'none',
               border: 'none',
               borderBottom: filter === "pending" ? '3px solid var(--primary)' : '3px solid transparent',
@@ -214,6 +200,7 @@ export default function AdminFeedbackPage() {
               cursor: 'pointer',
               transition: 'var(--transition-fast)',
               marginBottom: '-2px',
+              whiteSpace: 'nowrap',
             }}
             onMouseEnter={(e) => {
               if (filter !== "pending") e.currentTarget.style.color = 'var(--foreground)';
@@ -227,9 +214,9 @@ export default function AdminFeedbackPage() {
           <button
             onClick={() => setFilter("approved")}
             style={{
-              padding: '0.75rem 1rem',
+              padding: 'clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 2vw, 1rem)',
               fontWeight: '600',
-              fontSize: '0.95rem',
+              fontSize: 'clamp(0.85rem, 1.5vw, 0.95rem)',
               background: 'none',
               border: 'none',
               borderBottom: filter === "approved" ? '3px solid var(--primary)' : '3px solid transparent',
@@ -237,6 +224,7 @@ export default function AdminFeedbackPage() {
               cursor: 'pointer',
               transition: 'var(--transition-fast)',
               marginBottom: '-2px',
+              whiteSpace: 'nowrap',
             }}
             onMouseEnter={(e) => {
               if (filter !== "approved") e.currentTarget.style.color = 'var(--foreground)';
@@ -250,9 +238,9 @@ export default function AdminFeedbackPage() {
           <button
             onClick={() => setFilter("all")}
             style={{
-              padding: '0.75rem 1rem',
+              padding: 'clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 2vw, 1rem)',
               fontWeight: '600',
-              fontSize: '0.95rem',
+              fontSize: 'clamp(0.85rem, 1.5vw, 0.95rem)',
               background: 'none',
               border: 'none',
               borderBottom: filter === "all" ? '3px solid var(--primary)' : '3px solid transparent',
@@ -260,6 +248,7 @@ export default function AdminFeedbackPage() {
               cursor: 'pointer',
               transition: 'var(--transition-fast)',
               marginBottom: '-2px',
+              whiteSpace: 'nowrap',
             }}
             onMouseEnter={(e) => {
               if (filter !== "all") e.currentTarget.style.color = 'var(--foreground)';
@@ -327,21 +316,22 @@ export default function AdminFeedbackPage() {
                   {feedback.message}
                 </p>
 
-                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: 'clamp(0.5rem, 1.5vw, 0.75rem)', flexWrap: 'wrap' }}>
                   {!feedback.is_approved ? (
                     <button
                       onClick={() => handleApprove(feedback.id, true)}
                       className="btn"
                       style={{
-                        padding: '0.625rem 1.25rem',
+                        padding: 'clamp(0.5rem, 1vw, 0.625rem) clamp(0.75rem, 2vw, 1.25rem)',
                         background: 'var(--success)',
                         color: 'white',
                         border: 'none',
                         borderRadius: 'var(--radius-md)',
                         cursor: 'pointer',
                         fontWeight: '600',
-                        fontSize: '0.9rem',
+                        fontSize: 'clamp(0.8rem, 1.5vw, 0.9rem)',
                         transition: 'var(--transition-base)',
+                        whiteSpace: 'nowrap',
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'translateY(-2px)';
@@ -359,15 +349,16 @@ export default function AdminFeedbackPage() {
                       onClick={() => handleApprove(feedback.id, false)}
                       className="btn"
                       style={{
-                        padding: '0.625rem 1.25rem',
+                        padding: 'clamp(0.5rem, 1vw, 0.625rem) clamp(0.75rem, 2vw, 1.25rem)',
                         background: 'var(--warning)',
                         color: 'white',
                         border: 'none',
                         borderRadius: 'var(--radius-md)',
                         cursor: 'pointer',
                         fontWeight: '600',
-                        fontSize: '0.9rem',
+                        fontSize: 'clamp(0.8rem, 1.5vw, 0.9rem)',
                         transition: 'var(--transition-base)',
+                        whiteSpace: 'nowrap',
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'translateY(-2px)';
@@ -385,15 +376,16 @@ export default function AdminFeedbackPage() {
                     onClick={() => handleDelete(feedback.id)}
                     className="btn"
                     style={{
-                      padding: '0.625rem 1.25rem',
+                      padding: 'clamp(0.5rem, 1vw, 0.625rem) clamp(0.75rem, 2vw, 1.25rem)',
                       background: 'var(--error)',
                       color: 'white',
                       border: 'none',
                       borderRadius: 'var(--radius-md)',
                       cursor: 'pointer',
                       fontWeight: '600',
-                      fontSize: '0.9rem',
+                      fontSize: 'clamp(0.8rem, 1.5vw, 0.9rem)',
                       transition: 'var(--transition-base)',
+                      whiteSpace: 'nowrap',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-2px)';
@@ -416,10 +408,10 @@ export default function AdminFeedbackPage() {
       {/* Footer */}
       <footer style={{
         borderTop: '1px solid var(--border)',
-        padding: '2rem 1.5rem',
+        padding: 'clamp(1.5rem, 4vw, 2rem) 1.5rem',
         textAlign: 'center',
         color: 'var(--muted)',
-        fontSize: '0.9rem',
+        fontSize: 'clamp(0.8rem, 1.5vw, 0.9rem)',
         marginTop: '5rem',
       }}>
         <p style={{ margin: 0 }}>

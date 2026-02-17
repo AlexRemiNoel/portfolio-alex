@@ -121,7 +121,7 @@ export default function FeedbackPage() {
         showFullNav={true}
       />
 
-      <main style={{ maxWidth: '900px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+      <main style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(1.5rem, 5vw, 3rem) 1.5rem' }}>
         {/* Submit Feedback Form */}
         <section style={{ marginBottom: '5rem' }}>
           <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: '700', marginBottom: '1.5rem' }}>
@@ -156,7 +156,7 @@ export default function FeedbackPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="card" style={{ padding: '2rem' }}>
+          <form onSubmit={handleSubmit} className="card" style={{ padding: 'clamp(1.5rem, 4vw, 2rem)' }}>
             <div style={{ marginBottom: '1.5rem' }}>
               <label style={{
                 display: 'block',
@@ -237,14 +237,14 @@ export default function FeedbackPage() {
               className="btn"
               style={{
                 width: '100%',
-                padding: '1rem',
+                padding: 'clamp(0.75rem, 2vw, 1rem)',
                 background: isSubmitting ? 'var(--muted)' : 'var(--primary)',
                 color: 'white',
                 border: 'none',
                 borderRadius: 'var(--radius-lg)',
                 cursor: isSubmitting ? 'not-allowed' : 'pointer',
                 fontWeight: '600',
-                fontSize: '1rem',
+                fontSize: 'clamp(0.9rem, 2vw, 1rem)',
                 opacity: isSubmitting ? 0.6 : 1,
               }}
             >
@@ -269,7 +269,7 @@ export default function FeedbackPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               {approvedFeedback.map((feedback) => (
                 <div key={feedback.id} className="card" style={{ padding: '1.5rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', flexWrap: 'wrap', gap: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', flexWrap: 'wrap', gap: 'clamp(0.5rem, 2vw, 1rem)' }}>
                     <div>
                       <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.25rem' }}>
                         {feedback.name}
