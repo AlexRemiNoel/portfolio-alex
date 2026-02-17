@@ -1,0 +1,92 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "logout": "Logout",
+    "login": "Login",
+    "delete": "Delete",
+    "saving": "Saving...",
+    "submitting": "Submitting...",
+    "sending": "Sending...",
+    "back": "Back to Portfolio"
+  },
+  "navigation": {
+    "about": "About",
+    "skills": "Skills",
+    "projects": "Projects",
+    "contact": "Contact",
+    "feedback": "Feedback",
+    "admin": "Admin"
+  },
+  "home": {
+    "editMode": "Editing Mode - Click on any text to edit",
+    "saveChanges": "Save Changes",
+    "sendMessage": "Send Me a Message",
+    "viewProject": "View Project →",
+    "github": "GitHub →",
+    "addSkillCategory": "+ Add Skill Category",
+    "addProject": "+ Add Project",
+    "addContactLink": "+ Add Contact Link",
+    "contactEmail": "Contact Email:",
+    "allRightsReserved": "All rights reserved.",
+    "signInLabel": "Sign into your account"
+  },
+  "login": {
+    "title": "Login",
+    "username": "Username",
+    "password": "Password",
+    "enterUsername": "Enter your username",
+    "signIn": "Sign In",
+    "authenticating": "Authenticating...",
+    "loginFailed": "Login failed",
+    "serverError": "Failed to connect to server"
+  },
+  "contact": {
+    "title": "Contact Me",
+    "pageTitle": "Get in Touch",
+    "description": "Have a question or want to work together? Send me a message and I'll respond as soon as possible!",
+    "sentTo": "Your message will be sent to:",
+    "name": "Your Name *",
+    "email": "Your Email *",
+    "subject": "Subject *",
+    "message": "Your Message *",
+    "namePlaceholder": "John Doe",
+    "emailPlaceholder": "john@example.com",
+    "subjectPlaceholder": "Project Inquiry",
+    "messagePlaceholder": "Tell me about your project...",
+    "charactersOf": "/2000 characters",
+    "sendButton": "Send Message",
+    "success": "Message Sent!",
+    "successMessage": "Thank you for reaching out. I'll get back to you soon!",
+    "failedToSend": "Failed to send email"
+  },
+  "feedback": {
+    "title": "Feedback",
+    "leaveTitle": "Leave Your Feedback",
+    "whatOthersSay": "What Others Are Saying",
+    "name": "Your Name *",
+    "email": "Email (Optional)",
+    "rating": "Rating",
+    "message": "Your Message *",
+    "messagePlaceholder": "Share your thoughts...",
+    "charactersOf": "/1000 characters",
+    "submitButton": "Submit Feedback",
+    "success": "✅ Thank you! Your feedback has been submitted and is pending approval.",
+    "noFeedback": "No feedback yet. Be the first to leave a comment!",
+    "namePlaceholder": "John Doe",
+    "emailPlaceholder": "john@example.com"
+  },
+  "admin": {
+    "title": "Feedback Management",
+    "pending": "Pending",
+    "approved": "Approved",
+    "all": "All",
+    "noFeedback": "No feedback in this category.",
+    "approve": "✓ Approve",
+    "unapprove": "Unapprove",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to delete this feedback?",
+    "publicFeedback": "Public Feedback"
+  }
+}

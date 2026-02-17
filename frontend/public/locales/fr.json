@@ -1,0 +1,92 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "edit": "Modifier",
+    "cancel": "Annuler",
+    "logout": "Déconnexion",
+    "login": "Connexion",
+    "delete": "Supprimer",
+    "saving": "Enregistrement...",
+    "submitting": "Envoi...",
+    "sending": "Envoi...",
+    "back": "Retour au Portfolio"
+  },
+  "navigation": {
+    "about": "À propos",
+    "skills": "Compétences",
+    "projects": "Projets",
+    "contact": "Contact",
+    "feedback": "Retours",
+    "admin": "Admin"
+  },
+  "home": {
+    "editMode": "Mode édition - Cliquez sur n'importe quel texte pour modifier",
+    "saveChanges": "Enregistrer les modifications",
+    "sendMessage": "M'envoyer un message",
+    "viewProject": "Voir le projet →",
+    "github": "GitHub →",
+    "addSkillCategory": "+ Ajouter une catégorie de compétences",
+    "addProject": "+ Ajouter un projet",
+    "addContactLink": "+ Ajouter un lien de contact",
+    "contactEmail": "Email de contact :",
+    "allRightsReserved": "Tous droits réservés.",
+    "signInLabel": "Connectez-vous à votre compte"
+  },
+  "login": {
+    "title": "Connexion",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "enterUsername": "Entrez votre nom d'utilisateur",
+    "signIn": "Se connecter",
+    "authenticating": "Authentification en cours...",
+    "loginFailed": "Connexion échouée",
+    "serverError": "Échec de la connexion au serveur"
+  },
+  "contact": {
+    "title": "Contactez-moi",
+    "pageTitle": "Entrez en contact",
+    "description": "Vous avez une question ou souhaitez travailler ensemble ? Envoyez-moi un message et je vous répondrai dans les plus brefs délais !",
+    "sentTo": "Votre message sera envoyé à :",
+    "name": "Votre nom *",
+    "email": "Votre email *",
+    "subject": "Sujet *",
+    "message": "Votre message *",
+    "namePlaceholder": "Jean Dupont",
+    "emailPlaceholder": "jean@exemple.com",
+    "subjectPlaceholder": "Demande de projet",
+    "messagePlaceholder": "Parlez-moi de votre projet...",
+    "charactersOf": "/2000 caractères",
+    "sendButton": "Envoyer le message",
+    "success": "Message envoyé !",
+    "successMessage": "Merci de nous avoir contactés. Je vous répondrai bientôt !",
+    "failedToSend": "Échec de l'envoi de l'email"
+  },
+  "feedback": {
+    "title": "Retours",
+    "leaveTitle": "Laissez votre retour",
+    "whatOthersSay": "Ce que les autres en disent",
+    "name": "Votre nom *",
+    "email": "Email (Optionnel)",
+    "rating": "Évaluation",
+    "message": "Votre message *",
+    "messagePlaceholder": "Partagez vos pensées...",
+    "charactersOf": "/1000 caractères",
+    "submitButton": "Envoyer le retour",
+    "success": "✅ Merci ! Votre retour a été soumis et est en attente d'approbation.",
+    "noFeedback": "Aucun retour pour le moment. Soyez le premier à laisser un commentaire !",
+    "namePlaceholder": "Jean Dupont",
+    "emailPlaceholder": "jean@exemple.com"
+  },
+  "admin": {
+    "title": "Gestion des retours",
+    "pending": "En attente",
+    "approved": "Approuvés",
+    "all": "Tous",
+    "noFeedback": "Aucun retour dans cette catégorie.",
+    "approve": "✓ Approuver",
+    "unapprove": "Révoquer l'approbation",
+    "delete": "Supprimer",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce retour ?",
+    "publicFeedback": "Retours publics"
+  }
+}

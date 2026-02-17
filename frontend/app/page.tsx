@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 import style from "styled-jsx/style";
 import { EditableText } from "./components/EditableText";
 import { EditableTextarea } from "./components/EditableTextarea";
+import { useLanguage } from "./lib/i18n";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com';
 
 export default function Home() {
   const router = useRouter();
+  const { language, setLanguage, t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -257,7 +259,7 @@ export default function Home() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background)' }}>
-        <div className="animate-pulse" style={{ color: 'var(--foreground)' }}>Loading...</div>
+        <div className="animate-pulse" style={{ color: 'var(--foreground)' }}>{t('common.loading')}</div>
       </div>
     );
   }
@@ -286,33 +288,33 @@ export default function Home() {
               <a href="#about" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
                  onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
                  onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
-                About
+                {t('navigation.about')}
               </a>
               <a href="#skills" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
                  onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
                  onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
-                Skills
+                {t('navigation.skills')}
               </a>
               <a href="#projects" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
                  onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
                  onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
-                Projects
+                {t('navigation.projects')}
               </a>
               <a href="/contact" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
                  onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
                  onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
-                Contact
+                {t('navigation.contact')}
               </a>
               <a href="/feedback" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
                  onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
                  onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
-                Feedback
+                {t('navigation.feedback')}
               </a>
               {isAuthenticated && (
                 <a href="/feedback/admin" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
                    onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
                    onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
-                  Admin
+                  {t('navigation.admin')}
                 </a>
               )}
               {!isEditing && (
@@ -320,7 +322,7 @@ export default function Home() {
                   {isAuthenticated ? (
                     <>
                       <button onClick={handleEdit} className="btn btn-primary">
-                        Edit
+                        {t('common.edit')}
                       </button>
                       <button onClick={handleLogout} style={{
                         padding: '0.75rem 1.5rem',
@@ -331,16 +333,54 @@ export default function Home() {
                         cursor: 'pointer',
                         fontWeight: '600',
                       }}>
-                        Logout
+                        {t('common.logout')}
                       </button>
                     </>
                   ) : (
                     <button onClick={() => router.push("/login")} className="btn btn-primary">
-                      Login
+                      {t('common.login')}
                     </button>
                   )}
                 </>
               )}
+              <div style={{
+                display: 'flex',
+                gap: '0.5rem',
+                alignItems: 'center',
+                borderLeft: '1px solid var(--border)',
+                paddingLeft: '1rem',
+              }}>
+                <button
+                  onClick={() => setLanguage('en')}
+                  style={{
+                    padding: '0.5rem 0.75rem',
+                    background: language === 'en' ? 'var(--primary)' : 'var(--border)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '0.85rem',
+                  }}
+                >
+                  EN
+                </button>
+                <button
+                  onClick={() => setLanguage('fr')}
+                  style={{
+                    padding: '0.5rem 0.75rem',
+                    background: language === 'fr' ? 'var(--primary)' : 'var(--border)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '0.85rem',
+                  }}
+                >
+                  FR
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -358,7 +398,7 @@ export default function Home() {
         }}>
           <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
             <p style={{ fontWeight: '600', margin: 0 }}>
-              Editing Mode - Click on any text to edit
+              {t('home.editMode')}
             </p>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button onClick={handleCancel} style={{
@@ -370,7 +410,7 @@ export default function Home() {
                 cursor: 'pointer',
                 fontWeight: '600',
               }}>
-                Cancel
+                {t('common.cancel')}
               </button>
               <button onClick={handleSave} disabled={isSaving} className="btn" style={{
                 padding: '0.5rem 1rem',
@@ -382,7 +422,7 @@ export default function Home() {
                 fontWeight: '600',
                 opacity: isSaving ? 0.5 : 1,
               }}>
-                {isSaving ? "Saving..." : "Save Changes"}
+                {isSaving ? t('common.saving') : t('home.saveChanges')}
               </button>
             </div>
           </div>
@@ -520,7 +560,7 @@ export default function Home() {
                 fontWeight: '600',
               }}
             >
-              + Add Skill Category
+              {t('home.addSkillCategory')}
             </button>
           )}
         </section>
@@ -631,13 +671,13 @@ export default function Home() {
                       href={project.projectUrl}
                       style={{ color: 'var(--primary)' }}
                     >
-                      View Project →
+                      {t('home.viewProject')}
                     </a>
                     <a
                       href={project.githubUrl}
                       style={{ color: 'var(--primary)' }}
                     >
-                      GitHub →
+                      {t('home.github')}
                     </a>
                   </div>
                 )}
@@ -658,7 +698,7 @@ export default function Home() {
                 fontWeight: '600',
               }}
             >
-              + Add Project
+              {t('home.addProject')}
             </button>
           )}
         </section>
@@ -699,7 +739,7 @@ export default function Home() {
           {isEditing && (
             <div style={{ maxWidth: '500px', margin: '0 auto 2rem' }}>
               <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '500', marginBottom: '0.5rem' }}>
-                Contact Email:
+                {t('home.contactEmail')}
               </label>
               <input
                 type="email"
@@ -789,7 +829,7 @@ export default function Home() {
                 marginBottom: '2rem',
               }}
             >
-              + Add Contact Link
+              {t('home.addContactLink')}
             </button>
           )}
 
@@ -801,7 +841,7 @@ export default function Home() {
                 className="btn btn-primary"
                 style={{ display: 'inline-block', textDecoration: 'none' }}
               >
-                Send Me a Message
+                {t('home.sendMessage')}
               </a>
             </div>
           )}
@@ -823,7 +863,7 @@ export default function Home() {
             onChange={(value: string) => updateData(["footer", "name"], value)}
             isEditing={isEditing}
           />
-          . All rights reserved.
+          . {t('home.allRightsReserved')}
         </p>
       </footer>
     </div>

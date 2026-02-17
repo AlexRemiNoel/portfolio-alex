@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "../lib/i18n";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com';
 
 export default function ContactPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
@@ -63,10 +65,10 @@ export default function ContactPage() {
         }, 3000);
       } else {
         const errorData = await response.json();
-        setError(errorData.detail || "Failed to send email");
+        setError(errorData.detail || t('contact.failedToSend'));
       }
     } catch (err) {
-      setError("Failed to connect to server");
+      setError(t('login.serverError'));
       console.error("Submit error:", err);
     } finally {
       setIsSubmitting(false);
@@ -87,13 +89,13 @@ export default function ContactPage() {
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '1rem 1.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: '700', margin: 0 }}>
-              Contact Me
+              {t('contact.title')}
             </h1>
             <a
               href="/"
               style={{ color: 'var(--primary)', fontSize: '0.95rem', fontWeight: '500', textDecoration: 'none' }}
             >
-              Back to Portfolio
+              {t('common.back')}
             </a>
           </div>
         </div>
@@ -129,10 +131,10 @@ export default function ContactPage() {
               </svg>
             </div>
             <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: '700', marginBottom: '1rem' }}>
-              Message Sent!
+              {t('contact.success')}
             </h2>
             <p style={{ color: 'var(--muted)', fontSize: '1.125rem', marginBottom: '2rem' }}>
-              Thank you for reaching out. I'll get back to you soon!
+              {t('contact.successMessage')}
             </p>
             <a
               href="/"
@@ -158,7 +160,7 @@ export default function ContactPage() {
                 e.currentTarget.style.boxShadow = 'none';
               }}
             >
-              Back to Portfolio
+              {t('common.back')}
             </a>
           </div>
         ) : (

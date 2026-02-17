@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "../lib/i18n";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -37,10 +39,10 @@ export default function LoginPage() {
         router.push("/");
       } else {
         const errorData = await response.json();
-        setError(errorData.detail || "Login failed");
+        setError(errorData.detail || t('login.loginFailed'));
       }
     } catch (err) {
-      setError("Failed to connect to server");
+      setError(t('login.serverError'));
       console.error("Login error:", err);
     } finally {
       setIsLoading(false);
@@ -125,10 +127,10 @@ export default function LoginPage() {
               fontWeight: '700',
               marginBottom: '0.5rem',
             }}>
-              Login
+              {t('login.title')}
             </h2>
             <p style={{ color: 'var(--muted)', fontSize: '0.95rem' }}>
-              Sign into your account
+              {t('home.signInLabel')}
             </p>
           </div>
 
@@ -162,7 +164,7 @@ export default function LoginPage() {
                 marginBottom: '0.5rem',
                 color: 'var(--foreground)'
               }}>
-                Username
+                {t('login.username')}
               </label>
               <input
                 type="text"
@@ -170,7 +172,7 @@ export default function LoginPage() {
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 disabled={isLoading}
-                placeholder="Enter your username"
+                placeholder={t('login.enterUsername')}
                 style={{
                   width: '100%',
                   padding: '0.875rem 1rem',
@@ -201,7 +203,7 @@ export default function LoginPage() {
                 marginBottom: '0.5rem',
                 color: 'var(--foreground)'
               }}>
-                Password
+                {t('login.password')}
               </label>
               <input
                 type="password"
@@ -287,10 +289,10 @@ export default function LoginPage() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  Authenticating...
+                  {t('login.authenticating')}
                 </span>
               ) : (
-                "Sign In"
+                t('login.signIn')
               )}
             </button>
           </form>
