@@ -43,8 +43,9 @@ export function Navbar({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            flexWrap: "wrap",
+            flexWrap: "nowrap",
             gap: "1rem",
+            overflow: "hidden",
           }}
         >
           <a
@@ -74,15 +75,17 @@ export function Navbar({
                 display: "flex",
                 gap: "1.5rem",
                 alignItems: "center",
-                flexWrap: "wrap",
+                flexWrap: "nowrap",
+                overflow: "auto",
+                flex: 1,
+                minWidth: 0,
               }}
             >
               <a
                 href="#about"
                 style={{
-                  color: "var(--muted)",
-                  transition: "color 0.2s",
-                  textDecoration: "none",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
                 }}
                 onMouseOver={(e) =>
                   (e.currentTarget.style.color = "var(--primary)")
@@ -99,6 +102,8 @@ export function Navbar({
                   color: "var(--muted)",
                   transition: "color 0.2s",
                   textDecoration: "none",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
                 }}
                 onMouseOver={(e) =>
                   (e.currentTarget.style.color = "var(--primary)")
@@ -115,6 +120,8 @@ export function Navbar({
                   color: "var(--muted)",
                   transition: "color 0.2s",
                   textDecoration: "none",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
                 }}
                 onMouseOver={(e) =>
                   (e.currentTarget.style.color = "var(--primary)")
@@ -131,6 +138,8 @@ export function Navbar({
                   color: "var(--muted)",
                   transition: "color 0.2s",
                   textDecoration: "none",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
                 }}
                 onMouseOver={(e) =>
                   (e.currentTarget.style.color = "var(--primary)")
@@ -147,6 +156,11 @@ export function Navbar({
                   color: "var(--muted)",
                   transition: "color 0.2s",
                   textDecoration: "none",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0
+                  color: "var(--muted)",
+                  transition: "color 0.2s",
+                  textDecoration: "none",
                 }}
                 onMouseOver={(e) =>
                   (e.currentTarget.style.color = "var(--primary)")
@@ -154,7 +168,9 @@ export function Navbar({
                 onMouseOut={(e) =>
                   (e.currentTarget.style.color = "var(--muted)")
                 }
-              >
+              >  whiteSpace: "nowrap",
+                    flexShrink: 0,
+                  
                 {t("navigation.feedback")}
               </a>
               {isAuthenticated && (
@@ -178,18 +194,8 @@ export function Navbar({
               {!isEditing && (
                 <>
                   {isAuthenticated ? (
-                    <>
-                      <button
-                        onClick={onEdit}
-                        className="btn btn-primary"
-                        style={{
-                          padding: "0.75rem 1.5rem",
-                          background: "var(--primary)",
-                          color: "white",
-                          borderRadius: "var(--radius-lg)",
-                          border: "none",
-                          cursor: "pointer",
-                          fontWeight: "600",
+                    <>  whiteSpace: "nowrap",
+                          flexShrink: 0,
                         }}
                       >
                         {t("common.edit")}
@@ -204,11 +210,27 @@ export function Navbar({
                           border: "none",
                           cursor: "pointer",
                           fontWeight: "600",
+                          whiteSpace: "nowrap",
+                          flexShrink: 0,
                         }}
                       >
                         {t("common.logout")}
                       </button>
                     </>
+                  ) : (
+                    <button
+                      onClick={() => router.push("/login")}
+                      className="btn btn-primary"
+                      style={{
+                        padding: "0.75rem 1.5rem",
+                        background: "var(--primary)",
+                        color: "white",
+                        borderRadius: "var(--radius-lg)",
+                        border: "none",
+                        cursor: "pointer",
+                        fontWeight: "600",
+                        whiteSpace: "nowrap",
+                        flexShrink: 0
                   ) : (
                     <button
                       onClick={() => router.push("/login")}
@@ -227,7 +249,8 @@ export function Navbar({
                     </button>
                   )}
                 </>
-              )}
+              )}  flexShrink: 0,
+                
               <div
                 style={{
                   display: "flex",

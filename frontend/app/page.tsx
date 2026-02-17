@@ -65,39 +65,40 @@ export default function Home() {
   const [editData, setEditData] = useState(portfolioData);
 
   useEffect(() => {
+    const loadPortfolioForLanguage = async () => {
+      try {
+        const response = await fetch(`${API_URL}/portfolio?language=${language}`);
+        if (response.ok) {
+          const data = await response.json();
+          setPortfolioData(data.data);
+          setEditData(data.data);
+          setIsLoading(false);
+        }
+      } catch (err) {
+        console.error("Failed to load portfolio:", err);
+        setIsLoading(false);
+      }
+    };
+
     checkAuth();
-    // Exit edit mode when language changes
     setIsEditing(false);
-    loadPortfolio();
+    setIsLoading(true);
+    loadPortfolioForLanguage();
   }, [language]);
 
-  const checkAuth = async () => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      setIsAuthenticated(false);
-      setIsLoading(false);
+  const handleEdit = () => {
+    if (!isAuthenticated) {
+      router.push("/login");
       return;
     }
+    setIsEditing(true);
+    setEditData(JSON.parse(JSON.stringify(portfolioData)));
+  };
 
-    try {
-      const response = await fetch(`${API_URL}/auth/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-        localStorage.removeItem("access_token");
-      }
-    } catch (err) {
-      console.error("Auth check failed:", err);
-      setIsAuthenticated(false);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleCancel = () => {
+    setIsEditing(false);
+    // Reset to the current language's portfolio data
+    setEditData(JSON.parse(JSON.stringify(portfolioData)));
   };
 
   const loadPortfolio = async () => {
@@ -113,21 +114,6 @@ export default function Home() {
       console.error("Failed to load portfolio:", err);
       setIsLoading(false);
     }
-  };
-
-  const handleEdit = () => {
-    if (!isAuthenticated) {
-      router.push("/login");
-      return;
-    }
-    setIsEditing(true);
-    setEditData(JSON.parse(JSON.stringify(portfolioData)));
-  };
-
-  const handleCancel = () => {
-    setIsEditing(false);
-    // Reset to the current language's portfolio data
-    setEditData(JSON.parse(JSON.stringify(portfolioData)));
   };
 
   const handleSave = async () => {
