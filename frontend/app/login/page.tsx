@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "../lib/i18n";
+import { Navbar } from "../components/Navbar";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com';
 
@@ -55,10 +56,16 @@ export default function LoginPage() {
       background: 'var(--background)', 
       color: 'var(--foreground)',
       display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '1.5rem'
+      flexDirection: 'column',
     }}>
+      {/* Navigation */}
+      <Navbar
+        isAuthenticated={false}
+        isEditing={false}
+        portfolioName="Portfolio"
+        showFullNav={true}
+      />
+
       {/* Background decoration */}
       <div style={{
         position: 'fixed',
@@ -76,21 +83,9 @@ export default function LoginPage() {
         width: '100%',
         position: 'relative',
         zIndex: 1,
+        margin: 'auto',
+        padding: '1.5rem',
       }}>
-        {/* Logo/Title */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <a href="/" style={{ 
-            fontSize: '1.5rem', 
-            fontWeight: '700',
-            color: 'var(--foreground)',
-            textDecoration: 'none',
-            display: 'inline-block',
-            marginBottom: '0.5rem'
-          }}>
-            ← Portfolio
-          </a>
-        </div>
-
         {/* Login Card */}
         <div className="card" style={{ 
           padding: '2.5rem',

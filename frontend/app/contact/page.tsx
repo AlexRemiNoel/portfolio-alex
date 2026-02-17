@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "../lib/i18n";
+import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com';
 
@@ -78,28 +80,12 @@ export default function ContactPage() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--foreground)' }}>
       {/* Navigation */}
-      <nav style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 50,
-        borderBottom: '1px solid var(--border)',
-        background: 'rgba(10, 15, 30, 0.9)',
-        backdropFilter: 'blur(12px)',
-      }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '1rem 1.5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: '700', margin: 0 }}>
-              {t('contact.title')}
-            </h1>
-            <a
-              href="/"
-              style={{ color: 'var(--primary)', fontSize: '0.95rem', fontWeight: '500', textDecoration: 'none' }}
-            >
-              {t('common.back')}
-            </a>
-          </div>
-        </div>
-      </nav>
+      <Navbar
+        isAuthenticated={false}
+        isEditing={false}
+        portfolioName={t('contact.title')}
+        showFullNav={true}
+      />
 
       <main style={{ maxWidth: '700px', margin: '0 auto', padding: '3rem 1.5rem' }}>
         {submitSuccess ? (
@@ -338,6 +324,13 @@ export default function ContactPage() {
           </>
         )}
       </main>
+
+      {/* Footer */}
+      <Footer
+        year="2024"
+        name="Portfolio"
+        isEditing={false}
+      />
     </div>
   );
 }

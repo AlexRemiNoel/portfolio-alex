@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import style from "styled-jsx/style";
 import { EditableText } from "./components/EditableText";
 import { EditableTextarea } from "./components/EditableTextarea";
+import { Navbar } from "./components/Navbar";
+import { Footer } from "./components/Footer";
 import { useLanguage } from "./lib/i18n";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com';
@@ -267,124 +269,15 @@ export default function Home() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--foreground)' }}>
       {/* Navigation */}
-      <nav style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 50,
-        borderBottom: '1px solid var(--border)',
-        background: 'rgba(10, 15, 30, 0.9)',
-        backdropFilter: 'blur(12px)',
-      }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '1rem 1.5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-            <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: '700', margin: 0 }}>
-              <EditableText
-                value={isEditing ? editData.name : portfolioData.name}
-                onChange={(value: string) => updateData(["name"], value)}
-                isEditing={isEditing}
-              />
-            </h1>
-            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-              <a href="#about" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
-                 onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
-                 onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
-                {t('navigation.about')}
-              </a>
-              <a href="#skills" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
-                 onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
-                 onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
-                {t('navigation.skills')}
-              </a>
-              <a href="#projects" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
-                 onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
-                 onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
-                {t('navigation.projects')}
-              </a>
-              <a href="/contact" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
-                 onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
-                 onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
-                {t('navigation.contact')}
-              </a>
-              <a href="/feedback" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
-                 onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
-                 onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
-                {t('navigation.feedback')}
-              </a>
-              {isAuthenticated && (
-                <a href="/feedback/admin" style={{ color: 'var(--muted)', transition: 'color 0.2s' }}
-                   onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
-                   onMouseOut={(e) => e.currentTarget.style.color = 'var(--muted)'}>
-                  {t('navigation.admin')}
-                </a>
-              )}
-              {!isEditing && (
-                <>
-                  {isAuthenticated ? (
-                    <>
-                      <button onClick={handleEdit} className="btn btn-primary">
-                        {t('common.edit')}
-                      </button>
-                      <button onClick={handleLogout} style={{
-                        padding: '0.75rem 1.5rem',
-                        background: 'var(--muted)',
-                        color: 'white',
-                        borderRadius: 'var(--radius-lg)',
-                        border: 'none',
-                        cursor: 'pointer',
-                        fontWeight: '600',
-                      }}>
-                        {t('common.logout')}
-                      </button>
-                    </>
-                  ) : (
-                    <button onClick={() => router.push("/login")} className="btn btn-primary">
-                      {t('common.login')}
-                    </button>
-                  )}
-                </>
-              )}
-              <div style={{
-                display: 'flex',
-                gap: '0.5rem',
-                alignItems: 'center',
-                borderLeft: '1px solid var(--border)',
-                paddingLeft: '1rem',
-              }}>
-                <button
-                  onClick={() => setLanguage('en')}
-                  style={{
-                    padding: '0.5rem 0.75rem',
-                    background: language === 'en' ? 'var(--primary)' : 'var(--border)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontWeight: '600',
-                    fontSize: '0.85rem',
-                  }}
-                >
-                  EN
-                </button>
-                <button
-                  onClick={() => setLanguage('fr')}
-                  style={{
-                    padding: '0.5rem 0.75rem',
-                    background: language === 'fr' ? 'var(--primary)' : 'var(--border)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontWeight: '600',
-                    fontSize: '0.85rem',
-                  }}
-                >
-                  FR
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar
+        isAuthenticated={isAuthenticated}
+        isEditing={isEditing}
+        onEdit={handleEdit}
+        onLogout={handleLogout}
+        portfolioName={isEditing ? editData.name : portfolioData.name}
+        onPortfolioNameChange={(value: string) => updateData(["name"], value)}
+        showFullNav={true}
+      />
 
       {/* Edit Mode Banner */}
       {isEditing && (
@@ -868,4 +761,9 @@ export default function Home() {
       </footer>
     </div>
   );
-}
+}Footer
+        year={footer.year}
+        name={footer.name}
+        onNameChange={(value: string) => updateData(["footer", "name"], value)}
+        isEditing={isEditing}
+      /
