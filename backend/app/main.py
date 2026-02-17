@@ -45,7 +45,8 @@ app.add_middleware(
         "http://0.0.0.0:3000",
         "https://portfolio-alex-git-main-alexreminoels-projects.vercel.app",
         "https://portfolio-alex-alexreminoels-projects.vercel.app",
-        "https://portfolio-alex-2h4y.onrender.com"
+        "https://portfolio-alex-2h4y.onrender.com",
+        "https://portfolio-alex-zeta.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -133,8 +134,8 @@ def get_current_user_info(current_user: User = Depends(get_current_active_user))
 # ============================================================================
 
 @app.get("/portfolio", response_model=PortfolioResponse)
-def get_portfolio(db: Session = Depends(get_db)):
-    portfolio = db.query(Portfolio).first()
+def get_portfolio(language: str = "en", db: Session = Depends(get_db)):
+    portfolio = db.query(Portfolio).filter(Portfolio.language == language).first()
     
     if not portfolio:
         default_data = {
@@ -172,7 +173,7 @@ def get_portfolio(db: Session = Depends(get_db)):
             "footer": {"year": "2024", "name": "Your Name"}
         }
         
-        portfolio = Portfolio(name="default", data=json.dumps(default_data))
+        portfolio = Portfolio(name="default", language=language, data=json.dumps(default_data))
         db.add(portfolio)
         db.commit()
         db.refresh(portfolio)
@@ -195,11 +196,12 @@ def get_portfolio(db: Session = Depends(get_db)):
 @app.put("/portfolio", response_model=PortfolioResponse)
 def update_portfolio(
     portfolio_update: PortfolioUpdate,
+    language: str = "en",
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_admin_user)
 ):
     """Update portfolio data (protected - admin only)"""
-    portfolio = db.query(Portfolio).first()
+    portfolio = db.query(Portfolio).filter(Portfolio.language == language).first()
     
     if not portfolio:
         raise HTTPException(
@@ -210,12 +212,13 @@ def update_portfolio(
     history = PortfolioHistory(
         portfolio_id=portfolio.id,
         data=portfolio.data,
-        updated_by=current_user.id,
-        change_description="Portfolio updated"
+        updated_by=current_f"Portfolio updated ({language})"
     )
     db.add(history)
     
     portfolio.set_data(portfolio_update.data.model_dump())
+    portfolio.updated_by = current_user.id
+    portfolio.language = languageta.model_dump())
     portfolio.updated_by = current_user.id
     
     db.commit()

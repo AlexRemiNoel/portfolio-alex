@@ -67,7 +67,7 @@ export default function Home() {
   useEffect(() => {
     checkAuth();
     loadPortfolio();
-  }, []);
+  }, [language]);
 
   const checkAuth = async () => {
     const token = localStorage.getItem("access_token");
@@ -100,7 +100,7 @@ export default function Home() {
 
   const loadPortfolio = async () => {
     try {
-      const response = await fetch(`${API_URL}/portfolio`);
+      const response = await fetch(`${API_URL}/portfolio?language=${language}`);
       if (response.ok) {
         const data = await response.json();
         setPortfolioData(data.data);
@@ -129,7 +129,7 @@ export default function Home() {
     setIsSaving(true);
     try {
       const token = localStorage.getItem("access_token");
-      const response = await fetch(`${API_URL}/portfolio`, {
+      const response = await fetch(`${API_URL}/portfolio?language=${language}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

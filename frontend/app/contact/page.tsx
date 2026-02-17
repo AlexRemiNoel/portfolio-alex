@@ -10,7 +10,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.
 
 export default function ContactPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
@@ -22,11 +22,11 @@ export default function ContactPage() {
 
   useEffect(() => {
     loadPortfolio();
-  }, []);
+  }, [language]);
 
   const loadPortfolio = async () => {
     try {
-      const response = await fetch(`${API_URL}/portfolio`);
+      const response = await fetch(`${API_URL}/portfolio?language=${language}`);
       if (response.ok) {
         const data = await response.json();
         setPortfolioEmail(data.data.contact.email || "");

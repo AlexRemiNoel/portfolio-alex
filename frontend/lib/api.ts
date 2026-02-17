@@ -45,13 +45,17 @@ export async function logout(): Promise<void> {
 }
 
 // Portfolio
-export async function getPortfolio() {
-  const response = await axios.get('/portfolio');
+export async function getPortfolio(language: string = 'en') {
+  const response = await axios.get('/portfolio', {
+    params: { language },
+  });
   return response.data;
 }
 
-export async function updatePortfolio(data: any) {
-  const response = await axios.put('/portfolio', { data });
+export async function updatePortfolio(data: any, language: string = 'en') {
+  const response = await axios.put('/portfolio', { data }, {
+    params: { language },
+  });
   return response.data;
 }
 
