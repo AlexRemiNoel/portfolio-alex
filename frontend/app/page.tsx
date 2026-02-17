@@ -64,6 +64,11 @@ export default function Home() {
 
   const [editData, setEditData] = useState(portfolioData);
 
+  const checkAuth = () => {
+    const token = localStorage.getItem("access_token");
+    setIsAuthenticated(!!token);
+  };
+
   useEffect(() => {
     const loadPortfolioForLanguage = async () => {
       try {
