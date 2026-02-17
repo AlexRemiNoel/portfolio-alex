@@ -58,7 +58,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0f1e;
+    --background: #8aa7ff;
     --foreground: #f8fafc;
     --card: #0a2f6c;
     --card-hover: #334155;

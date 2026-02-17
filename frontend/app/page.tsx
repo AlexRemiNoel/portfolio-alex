@@ -66,6 +66,8 @@ export default function Home() {
 
   useEffect(() => {
     checkAuth();
+    // Exit edit mode when language changes
+    setIsEditing(false);
     loadPortfolio();
   }, [language]);
 
@@ -105,9 +107,11 @@ export default function Home() {
         const data = await response.json();
         setPortfolioData(data.data);
         setEditData(data.data);
+        setIsLoading(false);
       }
     } catch (err) {
       console.error("Failed to load portfolio:", err);
+      setIsLoading(false);
     }
   };
 
@@ -122,6 +126,7 @@ export default function Home() {
 
   const handleCancel = () => {
     setIsEditing(false);
+    // Reset to the current language's portfolio data
     setEditData(JSON.parse(JSON.stringify(portfolioData)));
   };
 
@@ -139,6 +144,8 @@ export default function Home() {
       });
 
       if (response.ok) {
+        // Reload to ensure content is synced properly
+        await loadPortfolio();
         setPortfolioData(editData);
         setIsEditing(false);
       } else {
