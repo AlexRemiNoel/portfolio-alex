@@ -11,7 +11,7 @@ interface FooterProps {
 }
 
 export function Footer({
-  year = "2024",
+  year = "2026",
   name = "Your Name",
   onNameChange,
   isEditing = false,

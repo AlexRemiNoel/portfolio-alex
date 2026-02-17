@@ -57,7 +57,7 @@ export default function Home() {
       ],
     },
     footer: {
-      year: "2024",
+      year: "2026",
       name: "Your Name",
     },
   });

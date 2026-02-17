@@ -327,7 +327,7 @@ export default function ContactPage() {
 
       {/* Footer */}
       <Footer
-        year="2024"
+        year="2026"
         name="Portfolio"
         isEditing={false}
       />

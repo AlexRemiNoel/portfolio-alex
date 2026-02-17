@@ -171,7 +171,7 @@ def get_portfolio(language: str = "en", db: Session = Depends(get_db)):
                     {"name": "GitHub", "url": "https://github.com/yourusername"}
                 ]
             },
-            "footer": {"year": "2024", "name": "Your Name"}
+            "footer": {"year": "2026", "name": "Your Name"}
         }
         
         portfolio = Portfolio(name="default", language=language, data=json.dumps(default_data))
