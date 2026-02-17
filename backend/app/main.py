@@ -213,14 +213,14 @@ def update_portfolio(
     history = PortfolioHistory(
         portfolio_id=portfolio.id,
         data=portfolio.data,
-        updated_by=current_f"Portfolio updated ({language})"
+        updated_by=current_user.id,
+        change_description=f"Portfolio updated ({language})"
     )
     db.add(history)
     
     portfolio.set_data(portfolio_update.data.model_dump())
     portfolio.updated_by = current_user.id
-    portfolio.language = languageta.model_dump())
-    portfolio.updated_by = current_user.id
+    portfolio.language = language
     
     db.commit()
     db.refresh(portfolio)

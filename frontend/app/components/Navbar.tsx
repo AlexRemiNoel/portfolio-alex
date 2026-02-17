@@ -77,8 +77,8 @@ export function Navbar({
                 alignItems: "center",
                 flexWrap: "nowrap",
                 overflow: "auto",
-                flex: 1,
-                minWidth: 0,
+                justifyContent: "center",
+                marginLeft: "auto",
               }}
             >
               <a
