@@ -295,22 +295,11 @@ export default function FeedbackPage() {
       </main>
 
       {/* Footer */}
-      <footer style={{
-        borderTop: '1px solid var(--border)',
-        padding: '2rem 1.5rem',
-        textAlign: 'center',
-        color: 'var(--muted)',
-        fontSize: '0.9rem',
-        marginTop: '5rem',
-      }}>
-        <p style={{ margin: 0 }}>
-          <a href="/" style={{ color: 'var(--primary)', textDecoration: 'none' }}>{t('common.back')}</a>
-        </p>
-      </footer>
-    </div>
-  );
-}Footer
+      <Footer
         year="2024"
         name="Portfolio"
         isEditing={false}
-      /
+      />
+    </div>
+  );
+}
