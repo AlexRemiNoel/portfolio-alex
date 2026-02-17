@@ -122,6 +122,47 @@ export default function FeedbackPage() {
       />
 
       <main style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(1.5rem, 5vw, 3rem) 1.5rem' }}>
+
+        {/* Approved Feedback */}
+        <section style={{ marginBottom: '5rem' }}>
+          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: '700', marginBottom: '1.5rem' }}>
+            {t('feedback.whatOthersSay')}
+          </h2>
+
+          {approvedFeedback.length === 0 ? (
+            <div className="card" style={{ padding: '3rem', textAlign: 'center' }}>
+              <p style={{ color: 'var(--muted)', fontSize: '1.1rem', margin: 0 }}>
+                {t('feedback.noFeedback')}
+              </p>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              {approvedFeedback.map((feedback) => (
+                <div key={feedback.id} className="card" style={{ padding: '1.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', flexWrap: 'wrap', gap: 'clamp(0.5rem, 2vw, 1rem)' }}>
+                    <div>
+                      <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.25rem' }}>
+                        {feedback.name}
+                      </h3>
+                      <p style={{ fontSize: '0.875rem', color: 'var(--muted)', margin: 0 }}>
+                        {new Date(feedback.created_at).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </p>
+                    </div>
+                    {feedback.rating && <StarRating rating={feedback.rating} />}
+                  </div>
+                  <p style={{ color: 'var(--foreground)', lineHeight: '1.7', margin: 0 }}>
+                    {feedback.message}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
         {/* Submit Feedback Form */}
         <section style={{ marginBottom: '5rem' }}>
           <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: '700', marginBottom: '1.5rem' }}>
@@ -253,45 +294,6 @@ export default function FeedbackPage() {
           </form>
         </section>
 
-        {/* Approved Feedback */}
-        <section>
-          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: '700', marginBottom: '1.5rem' }}>
-            {t('feedback.whatOthersSay')}
-          </h2>
-
-          {approvedFeedback.length === 0 ? (
-            <div className="card" style={{ padding: '3rem', textAlign: 'center' }}>
-              <p style={{ color: 'var(--muted)', fontSize: '1.1rem', margin: 0 }}>
-                {t('feedback.noFeedback')}
-              </p>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              {approvedFeedback.map((feedback) => (
-                <div key={feedback.id} className="card" style={{ padding: '1.5rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', flexWrap: 'wrap', gap: 'clamp(0.5rem, 2vw, 1rem)' }}>
-                    <div>
-                      <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.25rem' }}>
-                        {feedback.name}
-                      </h3>
-                      <p style={{ fontSize: '0.875rem', color: 'var(--muted)', margin: 0 }}>
-                        {new Date(feedback.created_at).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
-                      </p>
-                    </div>
-                    {feedback.rating && <StarRating rating={feedback.rating} />}
-                  </div>
-                  <p style={{ color: 'var(--foreground)', lineHeight: '1.7', margin: 0 }}>
-                    {feedback.message}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
       </main>
 
       {/* Footer */}
