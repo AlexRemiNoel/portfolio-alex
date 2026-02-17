@@ -46,7 +46,8 @@ app.add_middleware(
         "https://portfolio-alex-git-main-alexreminoels-projects.vercel.app",
         "https://portfolio-alex-alexreminoels-projects.vercel.app",
         "https://portfolio-alex-2h4y.onrender.com",
-        "https://portfolio-alex-zeta.vercel.app"
+        "https://portfolio-alex-zeta.vercel.app",
+        "https://portfolio-alex-zeta.vercel.app/"
     ],
     allow_credentials=True,
     allow_methods=["*"],
