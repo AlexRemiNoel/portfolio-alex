@@ -14,3 +14,4 @@ passlib==1.7.4
 bcrypt==4.1.2
 aiosmtplib>=3.0.0
 mangum==0.17.0
+resend

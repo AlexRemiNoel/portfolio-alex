@@ -382,12 +382,9 @@ async def send_contact_email(
     contact_request: ContactEmailRequest,
     db: Session = Depends(get_db)
 ):
-    """Send contact email to portfolio owner"""
-    import aiosmtplib
-    from email.mime.text import MIMEText
-    from email.mime.multipart import MIMEMultipart
+    import resend
     import os
-    
+
     # Get portfolio owner's email from portfolio data
     portfolio = db.query(Portfolio).first()
     if not portfolio:
@@ -395,39 +392,35 @@ async def send_contact_email(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Portfolio not found"
         )
-    
+
     portfolio_data = portfolio.get_data()
     recipient_email = portfolio_data.get("contact", {}).get("email")
-    
+
     if not recipient_email:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Contact email not configured"
         )
-    
-    # Create email
-    message = MIMEMultipart("alternative")
-    message["From"] = os.getenv("SMTP_FROM_EMAIL", contact_request.email)
-    message["To"] = recipient_email
-    message["Subject"] = f"Portfolio Contact: {contact_request.subject}"
-    message["Reply-To"] = contact_request.email
-    
-    # Email body
-    text = f"""
-New contact form submission from your portfolio:
 
-Name: {contact_request.name}
-Email: {contact_request.email}
-Subject: {contact_request.subject}
+    api_key = os.getenv("RESEND_API_KEY")
 
-Message:
-{contact_request.message}
+    if not api_key:
+        # Fallback: log for development
+        print("=" * 50)
+        print("📧 CONTACT EMAIL (Resend not configured, logging instead)")
+        print("=" * 50)
+        print(f"To: {recipient_email}")
+        print(f"From: {contact_request.email}")
+        print(f"Subject: {contact_request.subject}")
+        print(f"Message: {contact_request.message}")
+        print("=" * 50)
+        return {
+            "message": "Email logged successfully (Resend not configured)",
+            "status": "logged"
+        }
 
----
-This email was sent from your portfolio contact form.
-Reply directly to this email to respond to {contact_request.name}.
-    """
-    
+    resend.api_key = api_key
+
     html = f"""
 <html>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -451,49 +444,21 @@ Reply directly to this email to respond to {contact_request.name}.
 </body>
 </html>
     """
-    
-    message.attach(MIMEText(text, "plain"))
-    message.attach(MIMEText(html, "html"))
-    
-    # Send email
+
     try:
-        # Get SMTP settings from environment (with fallback to console logging)
-        smtp_host = os.getenv("SMTP_HOST")
-        smtp_port = int(os.getenv("SMTP_PORT", "587"))
-        smtp_username = os.getenv("SMTP_USERNAME")
-        smtp_password = os.getenv("SMTP_PASSWORD")
-        
-        if not all([smtp_host, smtp_username, smtp_password]):
-            # Fallback: Just log the email (for development)
-            print("=" * 50)
-            print("📧 CONTACT EMAIL (SMTP not configured, logging instead)")
-            print("=" * 50)
-            print(f"To: {recipient_email}")
-            print(f"From: {contact_request.email}")
-            print(f"Subject: {contact_request.subject}")
-            print(f"\n{text}")
-            print("=" * 50)
-            
-            return {
-                "message": "Email logged successfully (SMTP not configured for production)",
-                "status": "logged"
-            }
-        
-        # Send via SMTP
-        await aiosmtplib.send(
-            message,
-            hostname=smtp_host,
-            port=smtp_port,
-            username=smtp_username,
-            password=smtp_password,
-            start_tls=True,
-        )
-        
+        resend.Emails.send({
+            "from": "Portfolio Contact <onboarding@resend.dev>",
+            "to": recipient_email,
+            "reply_to": contact_request.email,
+            "subject": f"Portfolio Contact: {contact_request.subject}",
+            "html": html,
+        })
+
         return {
             "message": "Email sent successfully",
             "status": "sent"
         }
-        
+
     except Exception as e:
         print(f"Error sending email: {e}")
         raise HTTPException(
