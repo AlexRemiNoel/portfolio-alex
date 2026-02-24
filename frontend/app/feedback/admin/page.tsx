@@ -21,6 +21,7 @@ export default function AdminFeedbackPage() {
   const router = useRouter();
   const { t } = useLanguage();
   const [allFeedback, setAllFeedback] = useState<Feedback[]>([]);
+  const [allFeedbackCounts, setAllFeedbackCounts] = useState<Feedback[]>([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "pending" | "approved">("pending");
@@ -32,6 +33,7 @@ export default function AdminFeedbackPage() {
   useEffect(() => {
     if (isAuthenticated) {
       loadFeedback();
+      loadAllCounts();
     }
   }, [isAuthenticated, filter]);
 
@@ -61,9 +63,24 @@ export default function AdminFeedbackPage() {
     }
   };
 
+  const loadAllCounts = async () => {
+    const token = localStorage.getItem("access_token");
+    try {
+      const response = await fetch(`${API_URL}/feedback/all`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setAllFeedbackCounts(data);
+      }
+    } catch (err) {
+      console.error("Failed to load feedback counts:", err);
+    }
+  };
+
   const loadFeedback = async () => {
     const token = localStorage.getItem("access_token");
-    const endpoint = filter === "pending" 
+    const endpoint = filter === "pending"
       ? `${API_URL}/feedback/pending`
       : filter === "approved"
       ? `${API_URL}/feedback/approved`
@@ -100,6 +117,7 @@ export default function AdminFeedbackPage() {
 
       if (response.ok) {
         loadFeedback();
+        loadAllCounts();
       }
     } catch (err) {
       console.error("Failed to approve feedback:", err);
@@ -123,6 +141,7 @@ export default function AdminFeedbackPage() {
 
       if (response.ok) {
         loadFeedback();
+        loadAllCounts();
       }
     } catch (err) {
       console.error("Failed to delete feedback:", err);
@@ -150,12 +169,12 @@ export default function AdminFeedbackPage() {
 
   if (isLoading) {
     return (
-      <div style={{ 
-        minHeight: '100vh', 
-        background: 'var(--background)', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center' 
+      <div style={{
+        minHeight: '100vh',
+        background: 'var(--background)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}>
         <div className="animate-pulse" style={{ color: 'var(--foreground)' }}>
           {t('common.loading')}
@@ -164,8 +183,9 @@ export default function AdminFeedbackPage() {
     );
   }
 
-  const pendingCount = allFeedback.filter(f => !f.is_approved).length;
-  const approvedCount = allFeedback.filter(f => f.is_approved).length;
+  const pendingCount = allFeedbackCounts.filter(f => !f.is_approved).length;
+  const approvedCount = allFeedbackCounts.filter(f => f.is_approved).length;
+  const totalCount = allFeedbackCounts.length;
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, var(--background) 0%, rgba(0,0,0,0.03) 100%)', color: 'var(--foreground)' }}>
@@ -179,86 +199,68 @@ export default function AdminFeedbackPage() {
 
       <main style={{ maxWidth: '1200px', margin: '0 auto', padding: 'clamp(1.5rem, 5vw, 3rem) 1.5rem' }}>
         {/* Filter Tabs */}
-        <div style={{ 
-          display: 'flex', 
-          gap: 'clamp(0.5rem, 2vw, 1rem)', 
-          marginBottom: '2rem', 
+        <div style={{
+          display: 'flex',
+          gap: 'clamp(0.5rem, 2vw, 1rem)',
+          marginBottom: '2rem',
           borderBottom: '2px solid var(--border)',
           flexWrap: 'wrap',
           overflowX: 'auto'
         }}>
-          <button
-            onClick={() => setFilter("pending")}
-            style={{
-              padding: 'clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 2vw, 1rem)',
-              fontWeight: '600',
-              fontSize: 'clamp(0.85rem, 1.5vw, 0.95rem)',
-              background: 'none',
-              border: 'none',
-              borderBottom: filter === "pending" ? '3px solid var(--primary)' : '3px solid transparent',
-              color: filter === "pending" ? 'var(--primary)' : 'var(--muted)',
-              cursor: 'pointer',
-              transition: 'var(--transition-fast)',
-              marginBottom: '-2px',
-              whiteSpace: 'nowrap',
-            }}
-            onMouseEnter={(e) => {
-              if (filter !== "pending") e.currentTarget.style.color = 'var(--foreground)';
-            }}
-            onMouseLeave={(e) => {
-              if (filter !== "pending") e.currentTarget.style.color = 'var(--muted)';
-            }}
-          >
-            {t('admin.pending')} ({pendingCount})
-          </button>
-          <button
-            onClick={() => setFilter("approved")}
-            style={{
-              padding: 'clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 2vw, 1rem)',
-              fontWeight: '600',
-              fontSize: 'clamp(0.85rem, 1.5vw, 0.95rem)',
-              background: 'none',
-              border: 'none',
-              borderBottom: filter === "approved" ? '3px solid var(--primary)' : '3px solid transparent',
-              color: filter === "approved" ? 'var(--primary)' : 'var(--muted)',
-              cursor: 'pointer',
-              transition: 'var(--transition-fast)',
-              marginBottom: '-2px',
-              whiteSpace: 'nowrap',
-            }}
-            onMouseEnter={(e) => {
-              if (filter !== "approved") e.currentTarget.style.color = 'var(--foreground)';
-            }}
-            onMouseLeave={(e) => {
-              if (filter !== "approved") e.currentTarget.style.color = 'var(--muted)';
-            }}
-          >
-            {t('admin.approved')} ({approvedCount})
-          </button>
-          <button
-            onClick={() => setFilter("all")}
-            style={{
-              padding: 'clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 2vw, 1rem)',
-              fontWeight: '600',
-              fontSize: 'clamp(0.85rem, 1.5vw, 0.95rem)',
-              background: 'none',
-              border: 'none',
-              borderBottom: filter === "all" ? '3px solid var(--primary)' : '3px solid transparent',
-              color: filter === "all" ? 'var(--primary)' : 'var(--muted)',
-              cursor: 'pointer',
-              transition: 'var(--transition-fast)',
-              marginBottom: '-2px',
-              whiteSpace: 'nowrap',
-            }}
-            onMouseEnter={(e) => {
-              if (filter !== "all") e.currentTarget.style.color = 'var(--foreground)';
-            }}
-            onMouseLeave={(e) => {
-              if (filter !== "all") e.currentTarget.style.color = 'var(--muted)';
-            }}
-          >
-            {t('admin.all')} ({allFeedback.length})
-          </button>
+          {(["pending", "approved", "all"] as const).map((tab) => {
+            const count = tab === "pending" ? pendingCount : tab === "approved" ? approvedCount : totalCount;
+            const isActive = filter === tab;
+            return (
+              <button
+                key={tab}
+                onClick={() => setFilter(tab)}
+                style={{
+                  padding: 'clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 2vw, 1rem)',
+                  fontWeight: '600',
+                  fontSize: 'clamp(0.85rem, 1.5vw, 0.95rem)',
+                  background: 'none',
+                  border: 'none',
+                  borderBottom: isActive ? '3px solid var(--primary)' : '3px solid transparent',
+                  color: isActive ? 'var(--primary)' : 'var(--muted)',
+                  cursor: 'pointer',
+                  transition: 'var(--transition-fast)',
+                  marginBottom: '-2px',
+                  whiteSpace: 'nowrap',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) e.currentTarget.style.color = 'var(--foreground)';
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) e.currentTarget.style.color = 'var(--muted)';
+                }}
+              >
+                {t(`admin.${tab}`)}
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minWidth: '1.4rem',
+                  height: '1.4rem',
+                  padding: '0 0.35rem',
+                  borderRadius: '999px',
+                  fontSize: '0.75rem',
+                  fontWeight: '700',
+                  background: isActive
+                    ? 'var(--primary)'
+                    : tab === 'pending' && count > 0
+                    ? 'var(--warning)'
+                    : 'var(--border)',
+                  color: isActive || (tab === 'pending' && count > 0) ? 'white' : 'var(--muted)',
+                  transition: 'var(--transition-fast)',
+                }}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Feedback List */}
@@ -277,15 +279,15 @@ export default function AdminFeedbackPage() {
                 style={{
                   padding: '1.5rem',
                   border: `2px solid ${feedback.is_approved ? 'var(--success)' : 'var(--warning)'}`,
-                  background: feedback.is_approved 
-                    ? 'rgba(16, 185, 129, 0.05)' 
+                  background: feedback.is_approved
+                    ? 'rgba(16, 185, 129, 0.05)'
                     : 'rgba(251, 191, 36, 0.05)',
                 }}
               >
-                <div style={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'flex-start', 
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
                   marginBottom: '1rem',
                   flexWrap: 'wrap',
                   gap: '1rem'
