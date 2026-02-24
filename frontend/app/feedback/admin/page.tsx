@@ -32,8 +32,13 @@ export default function AdminFeedbackPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      loadFeedback();
       loadAllCounts();
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadFeedback();
     }
   }, [isAuthenticated, filter]);
 
@@ -189,7 +194,6 @@ export default function AdminFeedbackPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, var(--background) 0%, rgba(0,0,0,0.03) 100%)', color: 'var(--foreground)' }}>
-      {/* Navigation */}
       <Navbar
         isAuthenticated={isAuthenticated}
         isEditing={false}
@@ -407,7 +411,6 @@ export default function AdminFeedbackPage() {
         )}
       </main>
 
-      {/* Footer */}
       <footer style={{
         borderTop: '1px solid var(--border)',
         padding: 'clamp(1.5rem, 4vw, 2rem) 1.5rem',
