@@ -7,12 +7,13 @@ import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-alex-2h4y.onrender.com';
+const NOREPLY_EMAIL = "noreply@yourportfolio.com"; // auto-filled, hidden from user
 
 export default function ContactPage() {
   const router = useRouter();
   const { language, t } = useLanguage();
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [senderEmail, setSenderEmail] = useState(""); // visitor's email for reply-to
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,7 +51,8 @@ export default function ContactPage() {
         },
         body: JSON.stringify({
           name,
-          email,
+          email: NOREPLY_EMAIL,       // hidden noreply address
+          sender_email: senderEmail,  // visitor's email passed separately
           subject,
           message,
         }),
@@ -59,7 +61,7 @@ export default function ContactPage() {
       if (response.ok) {
         setSubmitSuccess(true);
         setName("");
-        setEmail("");
+        setSenderEmail("");
         setSubject("");
         setMessage("");
         setTimeout(() => {
@@ -212,6 +214,7 @@ export default function ContactPage() {
                 />
               </div>
 
+              {/* Visitor's email for reply-to — visible to user */}
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{
                   display: 'block',
@@ -223,8 +226,8 @@ export default function ContactPage() {
                 </label>
                 <input
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={senderEmail}
+                  onChange={(e) => setSenderEmail(e.target.value)}
                   required
                   placeholder={t('contact.emailPlaceholder')}
                   disabled={isSubmitting}
